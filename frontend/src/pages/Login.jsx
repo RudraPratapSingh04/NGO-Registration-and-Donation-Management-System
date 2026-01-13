@@ -3,7 +3,6 @@ import { Heart, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 const Login = () => {
   const [showPass, setShowPass] = useState(false);
-
   return (
     <div className="grid lg:grid-cols-2 min-h-screen bg-white font-sans">
       <div className="hidden lg:flex flex-col justify-between p-12 bg-[#1a2c2c] text-white relative overflow-hidden">
@@ -23,8 +22,6 @@ const Login = () => {
           </p>
         </div>
       </div>
-
-      {/* Login Form */}
       <div className="flex flex-col items-center justify-center p-8 lg:p-20">
         <div className="w-full max-w-md animate-in fade-in slide-in-from-right-4 duration-500">
           <div className="text-center mb-10">

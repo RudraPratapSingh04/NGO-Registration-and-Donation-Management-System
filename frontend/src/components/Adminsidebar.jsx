@@ -1,8 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Heart, User, HandHeart, History, LogOut } from 'lucide-react';
+import { Heart, User,  History, LogOut, Users,Menu, } from 'lucide-react';
 
-const Sidebar = () => {
+const Adminsidebar = () => {
   const linkClasses = ({ isActive }) =>
     `w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all ${
       isActive
@@ -26,14 +26,14 @@ const Sidebar = () => {
           <div className="flex items-center gap-2">
             <p className="text-sm font-semibold truncate">a</p>
             <span className="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">
-              User
+              Admin
             </span>
           </div>
           <p className="text-xs text-slate-500 truncate">a@a.a</p>
         </div>
       </div>
       <nav className="flex-1 px-3 space-y-1">
-        <NavLink to="/profile" className={linkClasses}>
+        <NavLink to="/adminprofile" className={linkClasses}>
           {({ isActive }) => (
             <div>
               <div className="flex items-center gap-3">
@@ -44,22 +44,33 @@ const Sidebar = () => {
             </div>
           )}
         </NavLink>
-        <NavLink to="/donate" className={linkClasses}>
+        <NavLink to="/overview" className={linkClasses}>
           {({ isActive }) => (
             <div>
               <div className="flex items-center gap-3">
-                <HandHeart size={20} />
-                <span className="text-sm font-medium">Donate</span>
+                <Menu size={20} />
+                <span className="text-sm font-medium">Overview</span>
+              </div>
+              
+            </div>
+          )}
+        </NavLink>
+        <NavLink to="/donations" className={linkClasses}>
+          {({ isActive }) => (
+            <div>
+              <div className="flex items-center gap-3">
+                <Heart size={20} />
+                <span className="text-sm font-medium">Donations</span>
               </div>
             </div>
           )}
         </NavLink>
-        <NavLink to="/donationhistory" className={linkClasses}>
+        <NavLink to="/users" className={linkClasses}>
           {({ isActive }) => (
             <div>
               <div className="flex items-center gap-3">
-                <History size={20} />
-                <span className="text-sm font-medium">Donation History</span>
+                <Users size={20} />
+                <span className="text-sm font-medium">Users</span>
               </div>
             </div>
           )}
@@ -75,4 +86,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default Adminsidebar;

@@ -1,10 +1,10 @@
 import React from 'react';
-import { User, Mail, Phone, Camera, Save } from 'lucide-react';
+import {  Mail, Phone, Camera, Save } from 'lucide-react';
 import Adminsidebar from '../components/Adminsidebar';
 
 const Adminprofile = () => {
   return (
-    <div className="flex min-h-screen bg-slate-50 font-sans">
+    <div className="ml-64 flex min-h-screen bg-slate-50 font-sans">
       <Adminsidebar activeTab="profile" />
       <main className="flex-1 p-8 lg:p-12 pb-0 lg:pb-0 overflow-y-auto">
         <header className="mb-8">
@@ -29,31 +29,37 @@ const Adminprofile = () => {
                   </div>
                 </div>
                 <form className="space-y-6">
-                  <ProfileInput label="Full Name" icon={<User size={18} />} defaultValue="a" />
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-slate-700 ml-1">Name</label>
+                    <div className="relative group">
+                      <input 
+                        placeholder="alok"
+                        className="w-full pl-4 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500" 
+                      />
+                    </div>
+                  </div>
                   <div className="space-y-1.5">
                     <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
                     <div className="relative group">
-                  <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input 
-                    disabled 
-                    value="a@a.a"
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed" 
-                  />
-                </div>
-              </div>
-              <div className="space-y-1.5">
-    <label className="text-sm font-semibold text-slate-700 ml-1">phone no</label>
-    <div className="relative group">
-      <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-      <input 
-        disabled 
-        value="1234567890"
-        className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed" 
-      />
-                </div>
-              </div>
+                      <input 
+                        disabled 
+                        value="a@a.a"
+                        className="w-full pl-4 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed" 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-slate-700 ml-1">phone no</label>
+                    <div className="relative group">
+                      
+                      <input 
+                        disabled 
+                        value="1234567890"
+                        className="w-full pl-4 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed" 
+                      />
+                    </div>
+                  </div>
               <button className="flex items-center gap-2 bg-[#24a173] hover:bg-[#1d855e] text-white px-6 py-3 rounded-xl font-bold transition-all mt-8 shadow-lg shadow-[#24a173]/20">
-                <Save size={18} />
                 Save Changes
               </button>
             </form>
@@ -66,7 +72,7 @@ const Adminprofile = () => {
             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Your Impact</p>
               <div className="mb-6">
-                <p className="text-3xl font-black text-slate-900">$0</p>
+                <p className="text-3xl font-black text-slate-900">0</p>
                 <p className="text-xs text-slate-500 font-medium">Total Donated</p>
               </div>
               <div>

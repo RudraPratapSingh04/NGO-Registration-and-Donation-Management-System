@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Heart, User, HandHeart, History, LogOut } from 'lucide-react';
+import { Heart, User, History, LogOut } from 'lucide-react';
 
 const Sidebar = () => {
   const linkClasses = ({ isActive }) =>
@@ -48,7 +48,7 @@ const Sidebar = () => {
           {({ isActive }) => (
             <div>
               <div className="flex items-center gap-3">
-                <HandHeart size={20} />
+                <Heart size={20} />
                 <span className="text-sm font-medium">Donate</span>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Filter, Download, History, CheckCircle2, Clock, XCircle } from 'lucide-react';
+import { Search} from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 
 const Donationhistory = () => {
@@ -25,14 +25,12 @@ const Donationhistory = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
-              <History size={16} className="text-slate-500" />
               <span className="text-sm font-medium text-slate-500">All</span>
             </div>
             <p className="text-3xl font-bold text-slate-900">0</p>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
-              <CheckCircle2 size={16} className="text-emerald-500" />
               <span className="text-sm font-medium text-emerald-500">Successful</span>
             </div>
             <p className="text-3xl font-bold text-slate-900">0</p>
@@ -40,7 +38,6 @@ const Donationhistory = () => {
 
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
-              <Clock size={16} className="text-amber-500" />
               <span className="text-sm font-medium text-amber-500">Pending</span>
             </div>
             <p className="text-3xl font-bold text-slate-900">0</p>
@@ -48,7 +45,6 @@ const Donationhistory = () => {
 
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
-              <XCircle size={16} className="text-red-500" />
               <span className="text-sm font-medium text-red-500">Failed</span>
             </div>
             <p className="text-3xl font-bold text-slate-900">0</p>
@@ -64,10 +60,6 @@ const Donationhistory = () => {
               className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-sm"
             />
           </div>
-
-          <button className="p-2.5 text-slate-500 hover:bg-slate-50 rounded-xl border border-slate-200">
-            <Filter size={20} />
-          </button>
 
           <select className="bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-2.5 focus:border-[#24a173]">
             <option>All Status</option>

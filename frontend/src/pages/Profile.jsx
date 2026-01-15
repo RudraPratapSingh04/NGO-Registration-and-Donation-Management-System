@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Mail, Phone, Camera, Save } from 'lucide-react';
+import { Camera } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 
 const Profile = () => {
@@ -29,32 +29,37 @@ const Profile = () => {
                   </div>
                 </div>
                 <form className="space-y-6">
-                  <ProfileInput label="Full Name" icon={<User size={18} />} defaultValue="a" />
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-slate-700 ml-1">Name</label>
+                    <div className="relative group">
+                      <input 
+                        placeholder="alok"
+                        className="w-full pl-4 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 " 
+                      />
+                    </div>
+                  </div>
                   <div className="space-y-1.5">
                     <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
                     <div className="relative group">
-                  <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input 
-                    disabled 
-                    value="a@a.a"
-                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed" 
-                  />
-                </div>
-              </div>
-              <div className="space-y-1.5">
-    <label className="text-sm font-semibold text-slate-700 ml-1">phone no</label>
-    <div className="relative group">
-      <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-      <input 
-        disabled 
-        value="1234567890"
-        className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed" 
-      />
-                </div>
-              </div>
+                      <input 
+                        disabled 
+                        value="a@a.a"
+                        className="w-full pl-4 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed" 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-slate-700 ml-1">phone no</label>
+                    <div className="relative group">
+                      <input 
+                        disabled 
+                        value="1234567890"
+                        className="w-full pl-4 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed" 
+                      />
+                    </div>
+                  </div>
               <button className="flex items-center gap-2 bg-[#24a173] hover:bg-[#1d855e] text-white px-6 py-3 rounded-xl font-bold transition-all mt-8 shadow-lg shadow-[#24a173]/20">
-                <Save size={18} />
-                Save Changes
+                  Save Changes
               </button>
             </form>
           </div>
@@ -80,18 +85,6 @@ const Profile = () => {
     </div>
   );
 };
-const ProfileInput = ({ label, icon, defaultvalue }) => (
-  <div className="space-y-1.5">
-    <label className="text-sm font-semibold text-slate-700 ml-1">{label}</label>
-    <div className="relative group">
-      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#24a173] transition-colors">
-        {icon}
-      </div>
-      <input 
-        defaultValue={defaultvalue}
-        className="w-full pl-11 pr-4 py-3.5 border border-slate-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-slate-900 bg-white" 
-      />
-    </div>
-  </div>
-);
+
+
 export default Profile;

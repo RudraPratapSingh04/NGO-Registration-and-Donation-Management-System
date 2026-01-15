@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, CheckCircle2, User, Mail, Phone, Lock, Eye, ArrowRight, ShieldCheck } from 'lucide-react';
 
-const Registration = () => {
+const Register = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({ fullName: '', email: '', phone: '' });
 
@@ -9,12 +9,9 @@ const Registration = () => {
     e.preventDefault();
     setStep(step + 1);
   };
-
-  // Shared Sidebar Component
   const Sidebar = () => (
     <div className="hidden lg:flex flex-col justify-between p-12 bg-[#1a2c2c] text-white relative overflow-hidden">
-      {/* Background Gradient Effect */}
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#248a62] blur-[120px] rounded-full translate-x-1/2 translate-y-1/2 opacity-50" />
+      <div className="absolute bottom-0 right-0  bg-[#248a62] blur-[120px] rounded-full translate-x-1/2 translate-y-1/2 opacity-50" />
       
       <div className="relative z-10">
         <div className="flex items-center gap-2 text-xl font-bold mb-20">
@@ -23,7 +20,6 @@ const Registration = () => {
           </div>
           <span>DonateHub</span>
         </div>
-
         <h1 className="text-5xl font-bold leading-tight pt-40 mb-6">
           Start your journey <br /> of giving today
         </h1>
@@ -33,8 +29,6 @@ const Registration = () => {
       </div>
     </div>
   );
-
-  // Stepper Indicator
   const Stepper = () => (
     <div className="flex items-center justify-center gap-4 mb-6">
       {[1, 2, 3].map((num) => (
@@ -58,18 +52,14 @@ const Registration = () => {
   return (
     <div className="grid lg:grid-cols-2 min-h-screen font-sans bg-white">
       <Sidebar />
-
       <div className="flex flex-col items-center justify-center p-8 lg:p-10">
         <div className="w-full max-w-md">
           <Stepper />
-
-          {step === 1 && (
+          {step == 1 && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center mb-0">
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">Create account</h2>
-                
               </div>
-
               <form onSubmit={handleNext} className="space-y-5">
                 <InputField label="Full Name" icon={<User size={18} />} placeholder="John Doe" />
                 <InputField label="Email" icon={<Mail size={18} />} placeholder="john@example.com" type="email" />
@@ -78,7 +68,6 @@ const Registration = () => {
                   <InputField label="Password" icon={<Lock size={18} />} placeholder="Min. 6 characters" type="password" />
                   <Eye size={18} className="absolute right-4 bottom-3.5 text-gray-400 cursor-pointer" />
                 </div>
-                
                 <button className="w-full bg-[#24a173] hover:bg-[#1d855e] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-all mt-8">
                   Send OTP <ArrowRight size={18} />
                 </button>
@@ -89,28 +78,23 @@ const Registration = () => {
             </div>
           )}
 
-          {step === 2 && (
+          {step == 2 && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 text-center">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Verify OTP</h2>
-              <p className="text-gray-500 mb-8">We've sent a code to <span className="text-gray-900 font-medium">+1234567890</span></p>
-              
+              <p className="text-gray-500 mb-8">We've sent a code to <span className="text-gray-900 font-medium">+1234567890</span></p> 
               <div className="flex gap-2 justify-between mb-8">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <input key={i} type="text" maxLength="1" className="w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-1 focus:ring-[#24a173] outline-none transition-all" />
                 ))}
               </div>
-
               <button onClick={handleNext} className="w-full bg-[#24a173] hover:bg-[#1d855e] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-all">
                 Verify OTP <ArrowRight size={18} />
-              </button>
-              
+              </button>             
               <p className="text-sm text-gray-500 mt-6">
                 Didn't receive the code? <span className="text-[#24a173] font-semibold cursor-pointer">Resend</span>
-              </p>
-              
+              </p>              
             </div>
           )}
-
           {step === 3 && (
             <div className="animate-in fade-in zoom-in duration-500 text-center">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-[#24a173]/10 text-[#24a173] rounded-full mb-8">
@@ -118,7 +102,6 @@ const Registration = () => {
               </div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome, 12345!</h2>
               <p className="text-gray-500 mb-10">Your account has been created successfully.</p>
-              
               <a href='/profile' className="w-full bg-[#24a173] hover:bg-[#1d855e] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-all">
                 Go to Dashboard <ArrowRight size={18} />
               </a>
@@ -129,7 +112,6 @@ const Registration = () => {
     </div>
   );
 };
-
 const InputField = ({ label, icon, ...props }) => (
   <div className="space-y-1.5">
     <label className="text-sm font-semibold text-gray-700">{label}</label>
@@ -145,4 +127,4 @@ const InputField = ({ label, icon, ...props }) => (
   </div>
 );
 
-export default Registration;
+export default Register;

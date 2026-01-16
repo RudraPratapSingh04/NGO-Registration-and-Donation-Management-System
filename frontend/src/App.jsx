@@ -9,21 +9,26 @@ import Adminprofile from './pages/Adminprofile'
 import Adminoverview from './pages/Adminoverview.jsx'
 import Donations from './pages/Donations.jsx'
 import Users from './pages/Users.jsx'
+import { refreshAccessToken } from "./services/refreshToken";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    refreshAccessToken();
+  }, []);
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/donationhistory" element={<Donationhistory />} />
-      <Route path="/donate" element={<Donate />} />
-      <Route path="/adminprofile" element={<Adminprofile />} />
-      <Route path="/overview" element={<Adminoverview />} />
-      <Route path="/donations" element={<Donations />} />
-      <Route path="/users" element={<Users />} />
-
+      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+      <Route path="/donationhistory" element={<ProtectedRoute><Donationhistory /></ProtectedRoute>} />
+      <Route path="/donate" element={<ProtectedRoute><Donate /></ProtectedRoute>} />
+      <Route path="/adminprofile" element={<ProtectedRoute><Adminprofile /></ProtectedRoute>} />
+      <Route path="/overview" element={<ProtectedRoute><Adminoverview /></ProtectedRoute>} />
+      <Route path="/donations" element={<ProtectedRoute><Donations /></ProtectedRoute>} />
+      <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
     </Routes>
   )
 }

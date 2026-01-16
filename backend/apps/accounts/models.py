@@ -4,11 +4,12 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     name=models.CharField(max_length=100)
     email=models.EmailField(unique=True)
-    password=models.CharField(max_length=100)
-    phone_no=models.CharField(max_length=15, unique=True)
+    phone_no=models.CharField(max_length=15, unique=True, null=True,blank=True,)
     timestamp=models.DateTimeField(auto_now_add=True)
     isAdmin=models.BooleanField(default=False)
     state=models.CharField(max_length=50)
+    USERNAME_FIELD="email"
+    REQUIRED_FIELDS=["username"]
 
 class EmailOTP(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)

@@ -3,7 +3,8 @@ import { Heart, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 const Login = () => {
   const [showPass, setShowPass] = useState(false);
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   return (
     <div className="grid lg:grid-cols-2 min-h-screen bg-white font-sans">
       <div className="hidden lg:flex flex-col justify-between p-12 bg-[#1a2c2c] text-white relative overflow-hidden">
@@ -36,17 +37,14 @@ const Login = () => {
               <label className="text-sm font-semibold text-gray-700 ml-1">Email</label>
               <div className="relative group">
                 <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#24a173] transition-colors" />
-                <input type="email" placeholder="Enter your email" className="w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white" />
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white" />
               </div>
             </div>
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-gray-700 ml-1">Password</label>
               <div className="relative group">
                 <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#24a173] transition-colors" />
-                <input type={showPass ? "text" : "password"} placeholder="Enter password" className="w-full pl-11 pr-12 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white" />
-                <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                  {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                <input type={showPass ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full pl-11 pr-12 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white" />
               </div>
             </div>
             <a href='/profile' className="w-full bg-[#24a173] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#1d855e] transition-all shadow-lg shadow-[#24a173]/20 mt-4">

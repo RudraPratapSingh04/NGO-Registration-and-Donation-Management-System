@@ -9,6 +9,7 @@ class User(AbstractUser):
     timestamp=models.DateTimeField(auto_now_add=True)
     isAdmin=models.BooleanField(default=False)
     state=models.CharField(max_length=50)
+
 class EmailOTP(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     otp=models.CharField(max_length=6)

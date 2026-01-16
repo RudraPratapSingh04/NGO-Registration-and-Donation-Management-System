@@ -5,7 +5,10 @@ export async function login(email, password) {
       "Content-Type": "application/json",
     },
     credentials: "include", 
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    })
   });
 
   if (!res.ok) {

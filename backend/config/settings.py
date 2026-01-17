@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'apps.donations',
     'apps.notification',
     'rest_framework',
+     'rest_framework_simplejwt',
 ]
 
 from datetime import timedelta

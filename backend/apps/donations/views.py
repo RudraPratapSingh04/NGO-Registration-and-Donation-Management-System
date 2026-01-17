@@ -16,9 +16,9 @@ def generate_payhere_hash(order_id, amount):
     return hashlib.md5(raw_string.encode()).hexdigest().upper()
 
 @api_view(["POST"])
-
+@permission_classes([IsAuthenticated])
 def make_donation(request):
-
+    print('API hit')
     amount=request.data.get('amount')
     if not amount or Decimal(amount) <= 0:
         return Response({"error": "Invalid amount"}, status=400)

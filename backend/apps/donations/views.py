@@ -5,8 +5,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import render
 from rest_framework.response import Response
+from apps.donations.serializers import DonationSerializer
 from .models import Donation
-# Create your views here.
+from rest_framework.views import APIView
+from django.db.models import Sum, Count
+
 MERCHANT_ID = "YOUR_MERCHANT_ID"
 MERCHANT_SECRET = "YOUR_MERCHANT_SECRET"
 CURRENCY = "INR"
@@ -47,3 +50,24 @@ def make_donation(request):
         "address":user.state,
     }, status=200)
 
+class MyDonationsView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        donations = Donation.objects.filter(user=request.user).order_by("-initiated_at")
+        print("Logged in user:", request.user)
+        print("Donation count:", donations.count())
+        serializer = DonationSerializer(donations, many=True)
+        total_amount = donations.filter(status="SUCCESS").aggregate(total=Sum("amount"))["total"] or 0
+        counts = donations.values("status").annotate(count=Count("id"))
+        counts_map = {c["status"]: c["count"] for c in counts}
+
+        return Response({
+            "donations": serializer.data,
+            "summary": {
+                "total": donations.count(),
+                "success": counts_map.get("SUCCESS", 0),
+                "pending": counts_map.get("PENDING", 0),
+                "failed": counts_map.get("FAILED", 0),
+                "total_amount": total_amount,
+            }
+        })

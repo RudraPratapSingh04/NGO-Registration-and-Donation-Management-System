@@ -11,6 +11,118 @@ const Donate = () => {
   function makeDonation() {
     setShowModal(true);
   }
+
+//   apiFetch("make_donation/", {
+//     method: "POST",
+//     credentials: "include",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ amount }),
+//   })
+//     .then((res) => {
+//       if (!res.ok) {
+//         throw new Error("Failed to create donation");
+//       }
+//       return res.json();
+//     })
+//     .then((obj) => {
+//       const payment = {
+//         sandbox: true,
+//         merchant_id: "Mjk0NDg1MjE3MDIxNDU0MDg1MjE3Njg2MTIyNjIxMTIwODM1Nzg2",
+
+//         return_url: "http://localhost:5173/donation-success",
+//         cancel_url: "http://localhost:5173/donation-cancel",
+//         notify_url: "https://localhost:8000/api/payhere-notify/",
+
+//         order_id: obj.order_id,
+//         items: "Donation",
+//         amount: obj.amount,
+//         currency: obj.currency,
+//         hash: obj.hash,
+
+//         first_name: obj.first_name,
+//         last_name: obj.last_name,
+//         email: obj.email,
+//         phone: obj.phone,
+//         address: obj.address,
+//         city: obj.city,
+//         country: "India",
+//       };
+
+//       setShowModal(false);
+
+//       payhere.onCompleted = function (orderId) {
+//         console.log("Payment completed:", orderId);
+//         // DO NOT mark success here
+//         window.location.href = "/donation-success";
+//       };
+
+//       payhere.onDismissed = function () {
+//         console.log("Payment dismissed");
+//         alert("Payment cancelled");
+//       };
+
+//       payhere.onError = function (error) {
+//         console.error("PayHere error:", error);
+//         alert("Payment failed");
+//       };
+
+//       payhere.startPayment(payment);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       alert("Unable to initiate payment");
+//     });
+// }
+
+  apiFetch("http://localhost:8000/api/make_donation/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ amount }),
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Failed to create donation");
+      }
+      return res.json();
+    })
+    .then((obj) => {
+      const payment = {
+        sandbox: true,
+        merchant_id: "Mjk0NDg1MjE3MDIxNDU0MDg1MjE3Njg2MTIyNjIxMTIwODM1Nzg2",
+
+        return_url: "http://localhost:5173/donation-success",
+        cancel_url: "http://localhost:5173/donation-cancel",
+        notify_url: "http://localhost:8000/api/payhere-notify/",
+
+        order_id: obj.order_id,
+        items: "Donation",
+        amount: obj.amount,
+        currency: obj.currency,
+        hash: obj.hash,
+
+        first_name: obj.first_name,
+        last_name: obj.last_name,
+        email: obj.email,
+        phone: obj.phone,
+        address: obj.address,
+        city: obj.city,
+        country: "India",
+      };
+
+      setShowModal(false);
+      payhere.startPayment(payment);
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("Unable to initiate payment");
+    });
+
+
+}
   function handlePayment() {
     if (!amount || amount <= 0) {
       alert("Please enter a valid amount");

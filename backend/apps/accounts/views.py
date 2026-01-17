@@ -110,8 +110,15 @@ class CurrentUserView(APIView):
             "id": user.id,
             "username": user.username,
             "email": user.email,
-            "is_admin": user.is_staff,  
+            "is_admin": user.isAdmin,  
             "state": getattr(user, "state", None),
-            "phone": getattr(user, "phone", None),
+            "phone": getattr(user, "phone_no", None),
             "created_at": user.date_joined,
         })
+    
+class LogoutView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        response = Response({"detail": "Logged out"})
+        response.delete_cookie("refresh")  
+        return response

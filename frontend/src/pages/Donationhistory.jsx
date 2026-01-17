@@ -1,8 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { Search} from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import { fetchMyDonations } from "../services/donationApi";
+
 
 const Donationhistory = () => {
+  const [donations, setDonations] = useState([]);
+  const [summary, setSummary] = useState({
+    total: 0,
+    success: 0,
+    pending: 0,
+    failed: 0,
+    total_amount: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadDonations() {
+      try {
+        const data = await fetchMyDonations();
+        console.log("Donations API response:", data);
+        setDonations(Array.isArray(data.donations) ? data.donations : []);
+
+        setSummary(data.summary ?? {
+          total: 0,
+          success: 0,
+          pending: 0,
+          failed: 0,
+          total_amount: 0,
+        });
+
+      } catch (err) {
+        console.error("Failed to load donations", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadDonations();
+  }, []);
+
+
+  if (loading) {
+      return (
+        <div className="flex min-h-screen items-center justify-center">
+          <p className="text-slate-500">Loading donations…</p>
+        </div>
+      );
+    }
   return (
     <div className="flex min-h-screen bg-slate-50 font-sans">
           <Sidebar />
@@ -18,7 +62,7 @@ const Donationhistory = () => {
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
               Total Donated
             </p>
-            <p className="text-3xl font-black text-[#24a173]">$0</p>
+            <p className="text-3xl font-black text-[#24a173]">₹{summary.total_amount}</p>
           </div>
         </header>
 
@@ -27,27 +71,27 @@ const Donationhistory = () => {
             <div className="flex items-center gap-2 mb-2">
               <span className="text-sm font-medium text-slate-500">All</span>
             </div>
-            <p className="text-3xl font-bold text-slate-900">0</p>
+            <p className="text-3xl font-bold text-slate-900">{summary.total}</p>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-sm font-medium text-emerald-500">Successful</span>
             </div>
-            <p className="text-3xl font-bold text-slate-900">0</p>
+            <p className="text-3xl font-bold text-slate-900">{summary.success}</p>
           </div>
 
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-sm font-medium text-amber-500">Pending</span>
             </div>
-            <p className="text-3xl font-bold text-slate-900">0</p>
+            <p className="text-3xl font-bold text-slate-900">{summary.pending}</p>
           </div>
 
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-sm font-medium text-red-500">Failed</span>
             </div>
-            <p className="text-3xl font-bold text-slate-900">0</p>
+            <p className="text-3xl font-bold text-slate-900">{summary.failed}</p>
           </div>
         </div>
 
@@ -81,12 +125,29 @@ const Donationhistory = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td colSpan="5" className="px-6 py-20 text-center text-slate-400">
-                  No donations yet. Start making a difference today!
-                </td>
-              </tr>
+              {donations.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="px-6 py-20 text-center text-slate-400">
+                    No donations yet. Start making a difference today!
+                  </td>
+                </tr>
+              ) : (
+                donations.map((d) => (
+                  <tr key={d.id} className="border-b">
+                    <td className="px-6 py-4 text-sm">{d.transaction_id}</td>
+                    <td className="px-6 py-4 text-sm">₹{d.amount}</td>
+                    <td className="px-6 py-4 text-sm">
+                      {new Date(d.initiated_at).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 text-sm">Online</td>
+                    <td className="px-6 py-4 text-sm font-semibold">
+                      {d.status}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
+
           </table>
         </div>
       </main>

@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from apps.accounts.views import CurrentUserView, LoginView,RefreshTokenView, RegisterView, VerifyOTPView
+from apps.accounts.views import CurrentUserView, LoginView, LogoutView,RefreshTokenView, RegisterView, VerifyOTPView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +27,5 @@ urlpatterns = [
     path('', include('apps.donations.urls')),
     path("api/auth/register/", RegisterView.as_view()),
     path("api/auth/verify-otp/", VerifyOTPView.as_view()),
+    path("api/auth/logout/", LogoutView.as_view()),
 ]

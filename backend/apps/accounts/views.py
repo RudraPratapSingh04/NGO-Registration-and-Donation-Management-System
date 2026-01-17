@@ -7,7 +7,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
-from .serializers import EmailTokenObtainPairSerializer
+from rest_framework import status
+from apps.accounts.utils import create_and_send_otp
+from apps.accounts.models import EmailOTP
+from .serializers import EmailTokenObtainPairSerializer, OTPVerifySerializer, RegisterSerializer
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class LoginView(TokenObtainPairView):
@@ -26,6 +32,63 @@ class LoginView(TokenObtainPairView):
                 path="/api/auth/refresh/",
             )
             del response.data["refresh"]
+        return response
+    
+class RegisterView(APIView):
+    permission_classes=[AllowAny]
+    def post(self,request):
+        serializer=RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user=serializer.save()
+            user.is_active = False
+            create_and_send_otp(user)
+            return Response(
+                {"message": "OTP sent to email"},
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class VerifyOTPView(APIView):
+    permission_classes=[AllowAny]
+    def post(self,request):
+        email=request.data.get("email")
+        otp=request.data.get("otp")
+        try:
+            user=User.objects.get(email=email)
+            record=EmailOTP.objects.filter(
+                user=user,
+                otp=otp,
+                is_verified=False
+            ).latest("created_at")
+        except (User.DoesNotExist, EmailOTP.DoesNotExist):
+            return Response({"error": "Invalid OTP"}, status=400)
+        if record.is_expired():
+            return Response({"error": "OTP expired"}, status=400)
+        user.is_active = True
+        user.save()
+        record.is_verified = True
+        record.save()
+        refresh=RefreshToken.for_user(user)
+        response=Response({
+            "access":str(refresh.access_token),
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "is_admin": user.is_staff,  
+                "state": getattr(user, "state", None),
+                "phone": getattr(user, "phone", None),
+                "created_at": user.date_joined,
+            }
+        })
+        response.set_cookie(
+            key="refresh",
+            value=str(refresh),
+            httponly=True,
+            secure=False,  
+            samesite="Lax",
+            path="/api/auth/refresh/",
+        )
         return response
 
 

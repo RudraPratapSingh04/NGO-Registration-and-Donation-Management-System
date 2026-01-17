@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from dotenv import load_dotenv
 from datetime import timedelta
 import os
+from corsheaders.defaults import default_headers
 
 load_dotenv()
 
@@ -45,8 +46,9 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.donations',
     'apps.notification',
+    'corsheaders',
     'rest_framework',
-     'rest_framework_simplejwt',
+    'rest_framework_simplejwt',
 ]
 
 from datetime import timedelta
@@ -69,8 +71,16 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "authorization",
+]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

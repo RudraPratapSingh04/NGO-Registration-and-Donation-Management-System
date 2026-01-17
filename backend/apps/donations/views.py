@@ -21,7 +21,6 @@ def generate_payhere_hash(order_id, amount):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def make_donation(request):
-    print('API hit')
     amount=request.data.get('amount')
     if not amount or Decimal(amount) <= 0:
         return Response({"error": "Invalid amount"}, status=400)
@@ -35,6 +34,7 @@ def make_donation(request):
     )
     user=request.user
     hash_value = generate_payhere_hash(order_id, amount)
+    
     return Response({
         "order_id":order_id,
         "items":"Donation",

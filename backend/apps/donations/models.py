@@ -14,7 +14,7 @@ class Donation(models.Model):
     initiated_at=models.DateTimeField(auto_now_add=True)
     completed_at=models.DateTimeField(null=True, blank=True)
     amount=models.DecimalField(max_digits=10, decimal_places=2)
-    status=models.CharField(max_length=10, choices=STATUS_CHOICES)
+    status=models.CharField(max_length=10, choices=STATUS_CHOICES,default='PENDING')
     transaction_id=models.CharField(max_length=100, unique=True)
 
 class Donor(models.Model):

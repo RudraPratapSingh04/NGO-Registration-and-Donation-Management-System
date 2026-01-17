@@ -123,50 +123,50 @@ function handlePayment() {
 //     });
 // }
 
-apiFetch("http://localhost:8000/api/make_donation/", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({ amount }),
-})
-  .then((res) => {
-    if (!res.ok) {
-      throw new Error("Failed to create donation");
-    }
-    return res.json();
+  apiFetch("http://localhost:8000/api/make_donation/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ amount }),
   })
-  .then((obj) => {
-    const payment = {
-      sandbox: true,
-      merchant_id: "Mjk0NDg1MjE3MDIxNDU0MDg1MjE3Njg2MTIyNjIxMTIwODM1Nzg2",
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Failed to create donation");
+      }
+      return res.json();
+    })
+    .then((obj) => {
+      const payment = {
+        sandbox: true,
+        merchant_id: "Mjk0NDg1MjE3MDIxNDU0MDg1MjE3Njg2MTIyNjIxMTIwODM1Nzg2",
 
-      return_url: "http://localhost:5173/donation-success",
-      cancel_url: "http://localhost:5173/donation-cancel",
-      notify_url: "http://localhost:8000/api/payhere-notify/",
+        return_url: "http://localhost:5173/donation-success",
+        cancel_url: "http://localhost:5173/donation-cancel",
+        notify_url: "http://localhost:8000/api/payhere-notify/",
 
-      order_id: obj.order_id,
-      items: "Donation",
-      amount: obj.amount,
-      currency: obj.currency,
-      hash: obj.hash,
+        order_id: obj.order_id,
+        items: "Donation",
+        amount: obj.amount,
+        currency: obj.currency,
+        hash: obj.hash,
 
-      first_name: obj.first_name,
-      last_name: obj.last_name,
-      email: obj.email,
-      phone: obj.phone,
-      address: obj.address,
-      city: obj.city,
-      country: "India",
-    };
+        first_name: obj.first_name,
+        last_name: obj.last_name,
+        email: obj.email,
+        phone: obj.phone,
+        address: obj.address,
+        city: obj.city,
+        country: "India",
+      };
 
-    setShowModal(false);
-    payhere.startPayment(payment);
-  })
-  .catch((err) => {
-    console.error(err);
-    alert("Unable to initiate payment");
-  });
+      setShowModal(false);
+      payhere.startPayment(payment);
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("Unable to initiate payment");
+    });
 
 
 }

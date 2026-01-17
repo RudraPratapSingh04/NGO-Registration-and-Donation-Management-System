@@ -1,8 +1,11 @@
 import React from 'react';
 import { Camera } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import { useSelector } from "react-redux";
+
 
 const Profile = () => {
+  const { user } = useSelector((state) => state.auth);
   return (
     <div className="flex min-h-screen bg-slate-50 font-sans">
       <Sidebar activeTab="profile" />
@@ -23,8 +26,8 @@ const Profile = () => {
                 </button>
               </div>
               <div>
-                    <h4 className="font-bold text-slate-900 text-lg">a</h4>
-                    <p className="text-slate-500 text-sm mb-2">a@a.a</p>
+                    <h4 className="font-bold text-slate-900 text-lg">{user?.username}</h4>
+                    <p className="text-slate-500 text-sm mb-2">{user?.email}</p>
                     <button className="text-[#24a173] text-sm font-semibold hover:underline">Change photo</button>
                   </div>
                 </div>

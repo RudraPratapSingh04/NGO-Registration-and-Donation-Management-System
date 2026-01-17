@@ -1,14 +1,29 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Heart, User, History, LogOut } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { logout } from "../services/authApi";
+import { useNavigate } from "react-router-dom";
+import { clearAuth } from "../store/authSlice";
 
 const Sidebar = () => {
+  const dispatch=useDispatch()
+  const navigate = useNavigate();
   const linkClasses = ({ isActive }) =>
     `w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all ${
       isActive
         ? 'bg-white/10 text-white shadow-sm'
         : 'text-slate-400 hover:bg-white/5 hover:text-white'
     }`;
+
+    async function handleLogout() {
+      try {
+        await logout();
+      } finally {
+        dispatch(clearAuth());
+        navigate("/login");
+      }
+    }
 
   return (
     <div className="w-64 h-screen bg-[#1a232e] text-white flex flex-col border-r border-white/5">
@@ -66,7 +81,7 @@ const Sidebar = () => {
         </NavLink>
       </nav>
       <div className="p-4 border-t border-white/5">
-        <button className="flex items-center gap-3 px-3 py-2 w-full text-red-400 hover:bg-red-400/10 rounded-xl transition-all text-sm font-medium">
+        <button className="flex items-center gap-3 px-3 py-2 w-full text-red-400 hover:bg-red-400/10 rounded-xl transition-all text-sm font-medium" onClick={handleLogout}>
           <LogOut size={20} />
           Logout
         </button>

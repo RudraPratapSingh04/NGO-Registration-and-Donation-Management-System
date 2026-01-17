@@ -45,3 +45,9 @@ export async function verifyOtp(payload) {
   return res.json();
 }
 
+export async function logout() {
+  await fetch("/api/auth/logout/", {
+    method: "POST",
+    credentials: "include",
+  });
+}

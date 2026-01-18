@@ -66,22 +66,74 @@ const Donate = () => {
       return;
     }
 
-    try {
-      const res = await apiFetch("/api/create-payment-intent/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount }),
+ 
+
+    apiFetch("/api/make_donation/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ amount }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to create donation");
+        }
+        return res.json();
+      })
+      .then((obj) => {
+        const payment = {
+          sandbox: true,
+          merchant_id: "Mjk0NDg1MjE3MDIxNDU0MDg1MjE3Njg2MTIyNjIxMTIwODM1Nzg2",
+
+          return_url: "http://localhost:5173/donation-success",
+          cancel_url: "http://localhost:5173/donation-cancel",
+          notify_url: "http://localhost:8000/api/payhere-notify/",
+
+          order_id: obj.order_id,
+          items: "Donation",
+          amount: obj.amount,
+          currency: obj.currency,
+          hash: obj.hash,
+
+          first_name: obj.first_name,
+          last_name: obj.last_name,
+          email: obj.email,
+          phone: obj.phone,
+          address: obj.address,
+          city: obj.city,
+          country: "India",
+        };
+
+        setShowModal(false);
+
+        if (typeof window.payhere === "undefined") {
+          alert("Payment gateway not loaded. Please refresh and try again.");
+          return;
+        }
+
+        window.payhere.onCompleted = function (orderId) {
+          console.log("Payment completed:", orderId);
+          window.location.href = "/donation-success";
+        };
+
+        window.payhere.onDismissed = function () {
+          console.log("Payment dismissed");
+          alert("Payment cancelled");
+        };
+
+        window.payhere.onError = function (error) {
+          console.error("PayHere error:", error);
+          alert("Payment failed");
+        };
+
+        window.payhere.startPayment(payment);
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Unable to initiate payment");
       });
-
-      if (!res.ok) throw new Error("Failed to create payment");
-
-      const data = await res.json();
-      setClientSecret(data.clientSecret);
-    } catch {
-      alert("Unable to initiate payment");
     }
-  };
-
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar />
@@ -135,5 +187,5 @@ const Donate = () => {
       </div>
     </div>
   );
-
+}
 export default Donate;

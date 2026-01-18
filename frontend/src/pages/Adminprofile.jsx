@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { apiFetch } from "../services/api";
 import { updateUser } from "../store/authSlice";
 import { fetchAllDonations } from "../services/donationApi";
-import StatCard from "../components/StatCard";
+import StatCard from "../components/statcard";
 import { fetchAdminStats } from "../services/adminapi";
 const Adminprofile = () => {
   const { user } = useSelector((state) => state.auth);

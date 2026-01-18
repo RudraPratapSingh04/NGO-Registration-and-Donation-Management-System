@@ -16,7 +16,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 import csv
 
-
+User=get_user_model()
 
 
 User = get_user_model()
@@ -181,3 +181,66 @@ def get_donations(request):
         })
     
     return JsonResponse(data, safe=False)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def admin_dashboard(request):
+    # 🔐 Admin-only access
+    if not request.user.isAdmin:
+        return Response(
+            {"detail": "You are not authorized to view this page"},
+            status=403
+        )
+
+    # ===== USERS =====
+    total_users = User.objects.count()
+
+    # ===== DONATIONS =====
+    successful_donations = Donation.objects.filter(status="SUCCESS")
+    total_donation_amount = (
+        successful_donations.aggregate(total=Sum("amount"))["total"] or 0
+    )
+
+    status_counts = (
+        Donation.objects
+        .values("status")
+        .annotate(count=Count("id"))
+    )
+    status_map = {s["status"]: s["count"] for s in status_counts}
+
+    successful = status_map.get("SUCCESS", 0)
+    pending = status_map.get("PENDING", 0)
+    failed = status_map.get("FAILED", 0)
+
+    # ===== RECENT DONATIONS =====
+    recent_donations = (
+        Donation.objects
+        .select_related("user")
+        .order_by("-initiated_at")[:5]
+    )
+
+    recent_data = [
+        {
+            "name": d.user.name,
+            "date": d.initiated_at,
+            "amount": d.amount,
+            "status": d.status,
+        }
+        for d in recent_donations
+    ]
+
+    # ✅ ALWAYS RETURN RESPONSE
+    return Response({
+        "stats": {
+            "total_users": total_users,
+            "total_donations": total_donation_amount,
+            "successful": successful,
+            "failed": failed,
+        },
+        "recent_donations": recent_data,
+        "donation_chart": {
+            "successful": successful,
+            "pending": pending,
+            "failed": failed,
+        },
+    })

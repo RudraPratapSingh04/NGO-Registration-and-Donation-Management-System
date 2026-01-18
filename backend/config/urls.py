@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-
+from django.conf import settings
+from django.conf.urls.static import static
 from apps.accounts.views import CurrentUserView, LoginView, LogoutView,RefreshTokenView, RegisterView, VerifyOTPView
 
 urlpatterns = [
@@ -25,7 +26,12 @@ urlpatterns = [
     path("api/auth/refresh/", RefreshTokenView.as_view()),
     path("api/auth/me/", CurrentUserView.as_view()),
     path('', include('apps.donations.urls')),
+    path('', include('apps.accounts.urls')),
     path("api/auth/register/", RegisterView.as_view()),
     path("api/auth/verify-otp/", VerifyOTPView.as_view()),
     path("api/auth/logout/", LogoutView.as_view()),
+    path("api/accounts/", include("apps.accounts.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

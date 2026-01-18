@@ -5,7 +5,6 @@ import { useDispatch,useSelector } from 'react-redux';
 import { logout } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
 import { clearAuth } from "../store/authSlice";
-import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const dispatch=useDispatch()

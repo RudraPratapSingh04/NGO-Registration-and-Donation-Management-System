@@ -46,7 +46,6 @@ class OTPVerifySerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    isAdmin = serializers.BooleanField(source="is_staff")
 
     class Meta:
         model = User

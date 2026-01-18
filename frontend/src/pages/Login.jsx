@@ -1,8 +1,38 @@
 import React, { useState } from 'react';
-import { Heart, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { useDispatch } from "react-redux";
+import { setAuth } from "../store/authSlice";
+import { Heart, Mail, Lock, ArrowRight } from 'lucide-react';
+import { login } from "../services/authApi";
+import { fetchCurrentUser } from '../services/userApi';
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+
+  const dispatch = useDispatch();
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    try {
+      const data = await login(email,password);
+      dispatch(setAuth({accessToken:data.access,user:null}));
+      const user = await fetchCurrentUser();
+      dispatch(
+        setAuth({accessToken: data.access,user,})
+      );
+      if (user.is_admin) {
+        navigate("/adminprofile");
+      } else {
+        navigate("/profile");
+      }
+    } catch (err) {
+      setError("Invalid email or password");
+    }
+  }
   return (
     <div className="grid lg:grid-cols-2 min-h-screen bg-white font-sans">
       <div className="hidden lg:flex flex-col justify-between p-12 bg-[#1a2c2c] text-white relative overflow-hidden">
@@ -28,27 +58,27 @@ const Login = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h2>
             <p className="text-gray-500">Sign in to continue your journey of giving</p>
           </div>
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleLogin}>
+            {error && (
+              <p className="text-red-500 text-sm text-center">{error}</p>
+            )}
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-gray-700 ml-1">Email</label>
               <div className="relative group">
                 <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#24a173] transition-colors" />
-                <input type="email" placeholder="Enter your email" className="w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white" />
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white" />
               </div>
             </div>
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-gray-700 ml-1">Password</label>
               <div className="relative group">
                 <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#24a173] transition-colors" />
-                <input type={showPass ? "text" : "password"} placeholder="Enter password" className="w-full pl-11 pr-12 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white" />
-                <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                  {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                <input type={showPass ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full pl-11 pr-12 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white" />
               </div>
             </div>
-            <a href='/profile' className="w-full bg-[#24a173] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#1d855e] transition-all shadow-lg shadow-[#24a173]/20 mt-4">
+            <button type="submit" className="w-full bg-[#24a173] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#1d855e] transition-all">
               Sign In <ArrowRight size={18} />
-            </a>
+            </button>
           </form>
           <p className="text-center text-gray-500 mt-8 text-sm">
             Don't have an account? <a href="/register" className="text-[#24a173] font-semibold hover:underline">Create one</a>

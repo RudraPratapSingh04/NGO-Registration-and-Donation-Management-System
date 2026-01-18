@@ -1,7 +1,14 @@
 import React, { useState,useRef } from 'react';
 import { Heart, CheckCircle2, User, Mail, Phone, Lock, Eye, ArrowRight, ShieldCheck } from 'lucide-react';
+import { registerUser, verifyOtp } from "../services/authApi";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setAuth } from "../store/authSlice";
+
 
 const Register = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -14,12 +21,44 @@ const Register = () => {
   });
 
   const [otp, setOtp]=useState("");
-  const otpRefs = useRef([]);
 
   const handleRegister=async (e) => {
     e.preventDefault();
-    setStep(step + 1);
+    setLoading(true);
+    setError(null);
+    try{
+      await registerUser(formData);
+      setStep(2);
+    } catch (err) {
+      setError(err?.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleVerifyOtp = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await verifyOtp({
+        email: formData.email,
+        otp,
+      });
+      dispatch(
+        setAuth({
+          accessToken: data.access,
+          user: data.user,
+          isAuthenticated: true,
+        })
+      );
+     navigate("/profile");
+    } catch (err) {
+      setError(err?.message || "Invalid OTP");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const Sidebar = () => (
     <div className="hidden lg:flex flex-col justify-between p-12 bg-[#1a2c2c] text-white relative overflow-hidden">
       <div className="absolute bottom-0 right-0  bg-[#248a62] blur-[120px] rounded-full translate-x-1/2 translate-y-1/2 opacity-50" />
@@ -65,20 +104,21 @@ const Register = () => {
       <Sidebar />
       <div className="flex flex-col items-center justify-center p-8 lg:p-10">
         <div className="w-full max-w-md">
+          {error && ( <p className="text-red-500 text-sm text-center mb-4"> {typeof error === "string" ? error : "Something went wrong"}</p>)}
           <Stepper />
           {step == 1 && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center mb-0">
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">Create account</h2>
               </div>
-              <form onSubmit={handleNext} className="space-y-5">
-                <InputField label="Full Name" icon={<User size={18} />} placeholder="John Doe" />
-                <InputField label="Email" icon={<Mail size={18} />} placeholder="john@example.com" type="email" />
-                <InputField label="Phone Number" icon={<Phone size={18} />} placeholder="+1234567890" />
+              <form onSubmit={handleRegister} className="space-y-5">
+                <InputField label="Full Name" icon={<User size={18} />} value={formData.name} onChange={(e) =>setFormData({ ...formData, name:e.target.value })} />
+                <InputField label="Email" icon={<Mail size={18} />} value={formData.email} onChange={(e) =>setFormData({ ...formData, email:e.target.value})} type="email" />
+                <InputField label="Phone Number" icon={<Phone size={18} />} value={formData.phone_no} onChange={(e) =>setFormData({ ...formData,phone_no: e.target.value})} />
                 <div className="relative">
-                  <InputField label="Password" icon={<Lock size={18} />} placeholder="Min. 6 characters" type="password" />
-                  <Eye size={18} className="absolute right-4 bottom-3.5 text-gray-400 cursor-pointer" />
+                  <InputField label="Password" icon={<Lock size={18} />} value={formData.password} onChange={(e) =>setFormData({ ...formData,password:e.target.value})} type="password" />
                 </div>
+                <InputField label="State" value={formData.state} onChange={(e) => setFormData({ ...formData, state: e.target.value })}/>
                 <button className="w-full bg-[#24a173] hover:bg-[#1d855e] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-all mt-8">
                   Send OTP <ArrowRight size={18} />
                 </button>
@@ -92,57 +132,19 @@ const Register = () => {
           {step == 2 && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 text-center">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Verify OTP</h2>
-              <p className="text-gray-500 mb-8">We've sent a code to <span className="text-gray-900 font-medium">+1234567890</span></p> 
+              <p className="text-gray-500 mb-8"> We've sent a code to{" "} <span className="text-gray-900 font-medium"> {formData.email}</span></p>
               <div className="flex gap-2 justify-between mb-8">
-                {[0, 1, 2, 3, 4, 5].map((i) => (
-                  <input
-                    key={i}
-                    ref={(el) => (otpRefs.current[i] = el)}
-                    type="text"
-                    maxLength={1}
-                    value={otp[i] || ""}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/, "");
-                      if (!value) return;
-
-                      const newOtp = otp.split("");
-                      newOtp[i] = value;
-                      setOtp(newOtp.join(""));
-
-                      if (i < 5) otpRefs.current[i + 1].focus();
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Backspace") {
-                        const newOtp = otp.split("");
-                        newOtp[i] = "";
-                        setOtp(newOtp.join(""));
-
-                        if (i > 0) otpRefs.current[i - 1].focus();
-                      }
-                    }}
+                {[0, 1, 2, 3, 4, 5].map((i) => (<input key={i} type="text" maxLength="1" value={otp[i] || ""} onChange={(e) => { const value = e.target.value.replace(/\D/, ""); const newOtp = otp.split(""); newOtp[i] = value; setOtp(newOtp.join(""));}}
                     className="w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl"
                   />
                 ))}
               </div>
-
               <button onClick={handleVerifyOtp} disabled={otp.length !== 6 || loading} className="w-full bg-[#24a173] text-white py-4 rounded-xl" >
                 Verify OTP
               </button>
               <p className="text-sm text-gray-500 mt-6">
                 Didn't receive the code? <span className="text-[#24a173] font-semibold cursor-pointer">Resend</span>
               </p>              
-            </div>
-          )}
-          {step === 3 && (
-            <div className="animate-in fade-in zoom-in duration-500 text-center">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-[#24a173]/10 text-[#24a173] rounded-full mb-8">
-                <ShieldCheck size={48} />
-              </div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome, 12345!</h2>
-              <p className="text-gray-500 mb-10">Your account has been created successfully.</p>
-              <a href='/profile' className="w-full bg-[#24a173] hover:bg-[#1d855e] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-all">
-                Go to Dashboard <ArrowRight size={18} />
-              </a>
             </div>
           )}
         </div>

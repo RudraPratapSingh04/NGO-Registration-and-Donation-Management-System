@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import { Heart, CheckCircle2, User, Mail, Phone, Lock, Eye, ArrowRight, ShieldCheck } from 'lucide-react';
 
 const Register = () => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({ fullName: '', email: '', phone: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone_no: "",
+    password: "",
+    state: "",
+  });
 
-  const handleNext = (e) => {
+  const [otp, setOtp]=useState("");
+  const otpRefs = useRef([]);
+
+  const handleRegister=async (e) => {
     e.preventDefault();
     setStep(step + 1);
   };
@@ -83,13 +94,40 @@ const Register = () => {
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Verify OTP</h2>
               <p className="text-gray-500 mb-8">We've sent a code to <span className="text-gray-900 font-medium">+1234567890</span></p> 
               <div className="flex gap-2 justify-between mb-8">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <input key={i} type="text" maxLength="1" className="w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-1 focus:ring-[#24a173] outline-none transition-all" />
+                {[0, 1, 2, 3, 4, 5].map((i) => (
+                  <input
+                    key={i}
+                    ref={(el) => (otpRefs.current[i] = el)}
+                    type="text"
+                    maxLength={1}
+                    value={otp[i] || ""}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/, "");
+                      if (!value) return;
+
+                      const newOtp = otp.split("");
+                      newOtp[i] = value;
+                      setOtp(newOtp.join(""));
+
+                      if (i < 5) otpRefs.current[i + 1].focus();
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Backspace") {
+                        const newOtp = otp.split("");
+                        newOtp[i] = "";
+                        setOtp(newOtp.join(""));
+
+                        if (i > 0) otpRefs.current[i - 1].focus();
+                      }
+                    }}
+                    className="w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl"
+                  />
                 ))}
               </div>
-              <button onClick={handleNext} className="w-full bg-[#24a173] hover:bg-[#1d855e] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-all">
-                Verify OTP <ArrowRight size={18} />
-              </button>             
+
+              <button onClick={handleVerifyOtp} disabled={otp.length !== 6 || loading} className="w-full bg-[#24a173] text-white py-4 rounded-xl" >
+                Verify OTP
+              </button>
               <p className="text-sm text-gray-500 mt-6">
                 Didn't receive the code? <span className="text-[#24a173] font-semibold cursor-pointer">Resend</span>
               </p>              

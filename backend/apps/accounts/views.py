@@ -146,18 +146,23 @@ def update_profile_picture(request):
 
 
 @api_view(["GET"])
-@permission_classes([IsAdminUser])  
+@permission_classes([IsAuthenticated])
 def list_users(request):
+    user=request.user
+    if not user.isAdmin:
+        return Response({"error":"Only admins can access this."},status=403)
     users = User.objects.all().order_by("-timestamp")
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
 @api_view(["PATCH"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def toggle_admin(request, user_id):
+    user=request.user
+    if not user.isAdmin:
+        return Response({"error":"Only admins can access this."},status=403)    
     try:
         user = User.objects.get(id=user_id)
-        # update your actual field
         user.isAdmin = not user.isAdmin
         user.save()
         return Response({

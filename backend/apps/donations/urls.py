@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from .views import export_donations_csv
+from .views import get_donations
 
 urlpatterns = [
     path("api/my/", views.MyDonationsView.as_view()),
@@ -7,5 +9,7 @@ urlpatterns = [
     path("api/stripe/webhook/", views.stripe_webhook),
     path("api/all/", views.AllDonationsView.as_view()),
     path("api/admin/stats/", views.AdminStatsView.as_view()),
+    path('api/export-csv/', export_donations_csv, name='export_donations_csv'),
+    path('api/donations/', get_donations)
 ]
 

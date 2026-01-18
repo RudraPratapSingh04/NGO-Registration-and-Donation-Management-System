@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useEffect } from "react";
 import { fetchUsers,toggleAdmin } from "../services/userApi";
-import { Search, ShieldCheck, ShieldAlert } from 'lucide-react';
+import { Search, ShieldCheck, ShieldAlert,Download } from 'lucide-react';
 import Adminsidebar from '../components/Adminsidebar';
 
 
@@ -30,7 +30,39 @@ const Users = () => {
     alert("Failed to update role");
   }
 };
+const exportToCSV = () => {
+  if (users.length === 0) {
+    alert("No data available to export");
+    return;
+  }
 
+  const headers = ["User ID", "Name", "Email", "Phone", "Role"];
+
+  const rows = users.map(user => [
+    user.id,
+    `"${user.name}"`, 
+    user.email,
+    user.phone,
+    user.role
+  ]);
+
+  const csvContent = [
+    headers.join(","), 
+    ...rows.map(row => row.join(","))
+  ].join("\n");
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  
+  link.setAttribute("href", url);
+  link.setAttribute("download", `users_export_${new Date().toISOString().slice(0,10)}.csv`);
+  link.style.visibility = 'hidden';
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 const removeAdmin = makeAdmin;
 
 
@@ -78,14 +110,19 @@ const removeAdmin = makeAdmin;
             </div>
           ))}
         </div>
-        <div className="bg-white p-4 rounded-3xl border shadow-sm mb-6">
-          <div className="relative">
+        <div className="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm mb-6 flex gap-4 items-center">
+          <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input
-              placeholder="Search by name or email..."
-              className="w-full pl-11 pr-4 py-3 bg-slate-50 rounded-2xl outline-none"
+              type="text"
+              placeholder="Search by ID, user name, or payment method..."
+              className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-sm"
             />
           </div>
+          <button onClick={exportToCSV} className="flex items-center gap-2 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-2xl hover:bg-slate-50 transition-all text-sm font-bold" >
+            <Download size={18} />
+            Export CSV
+          </button>
         </div>
         <div className="bg-white rounded-3xl border shadow-sm overflow-hidden">
           <table className="w-full text-left">

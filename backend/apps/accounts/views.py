@@ -76,9 +76,10 @@ class VerifyOTPView(APIView):
             "access":str(refresh.access_token),
             "user": {
                 "id": user.id,
+                "name": user.name,
                 "username": user.username,
                 "email": user.email,
-                "is_admin": user.isAdmin,  
+                "is_admin": user.isAdmin,
                 "state": getattr(user, "state", None),
                 "phone": getattr(user, "phone_no", None),
                 "created_at": user.date_joined,
@@ -112,9 +113,10 @@ class CurrentUserView(APIView):
         user = request.user
         return Response({
             "id": user.id,
+            "name": user.name,
             "username": user.username,
             "email": user.email,
-            "is_admin": user.isAdmin,  
+            "is_admin": user.isAdmin,
             "state": getattr(user, "state", None),
             "phone": getattr(user, "phone_no", None),
             "created_at": user.date_joined,

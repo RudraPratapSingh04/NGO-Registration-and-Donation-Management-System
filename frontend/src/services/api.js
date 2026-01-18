@@ -9,17 +9,19 @@ export async function apiFetch(endpoint, options = {}) {
     const state = store.getState();
     const accessToken = state.auth.accessToken;
 
+    const isFormData = options.body instanceof FormData;
+    const headers = {
+      ...(!isFormData && { "Content-Type": "application/json" }),
+      ...(options.headers || {}),
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    };
+
     return fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...(options.headers || {}),
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-      },
+      headers,
       credentials: "include",
     });
   };
-
 
   let response = await makeRequest();
   if (response.status === 401) {

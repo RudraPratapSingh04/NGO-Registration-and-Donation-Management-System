@@ -41,6 +41,12 @@ const Adminprofile = () => {
       ? `http://localhost:8000${user.profile_picture}`
       : null,
   );
+
+  useEffect(() => {
+    if (user?.profile_picture) {
+      setAvatar(`http://localhost:8000${user.profile_picture}`);
+    }
+  }, [user?.profile_picture]);
   useEffect(() => {
     async function loadRecentDonations() {
       try {
@@ -81,20 +87,27 @@ const Adminprofile = () => {
     const formData = new FormData();
     formData.append("profile_picture", file);
 
-    const res = await apiFetch("/api/profile/upload-picture/", {
-      method: "POST",
-      body: formData,
-      headers: {},
-    });
+    try {
+      const res = await apiFetch("/api/profile/upload-picture/", {
+        method: "POST",
+        body: formData,
+        headers: {},
+      });
 
-    if (!res.ok) return;
+      if (!res.ok) {
+        console.error("Failed to upload profile picture");
+        return;
+      }
 
-    const data = await res.json();
-    if (data?.profile_picture) {
-      const fullUrl = `http://localhost:8000${data.profile_picture}`;
-      setAvatar(fullUrl);
+      const data = await res.json();
+      if (data?.profile_picture) {
+        const fullUrl = `http://localhost:8000${data.profile_picture}`;
+        setAvatar(fullUrl);
 
-      dispatch(updateUser({ profile_picture: data.profile_picture }));
+        dispatch(updateUser({ profile_picture: data.profile_picture }));
+      }
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
     }
   };
 
@@ -109,13 +122,13 @@ const Adminprofile = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-          <div className="flex items-center gap-6 mb-10">
-        <div className="relative group">
+            <div className="flex items-center gap-6 mb-10">
+              <div className="relative group">
                 {avatar ? (
                   <img
-               src={avatar}
-              alt="Admin Avatar"
-                className="w-24 h-24 rounded-full object-cover border"
+                    src={avatar}
+                    alt="Admin Avatar"
+                    className="w-24 h-24 rounded-full object-cover border"
                   />
                 ) : (
                   <div className="w-24 h-24 bg-[#24a173] rounded-full flex items-center justify-center text-4xl font-bold text-white">
@@ -146,7 +159,7 @@ const Adminprofile = () => {
                 <p className="text-slate-500 text-sm">{user?.email}</p>
 
                 <button
-            onClick={() => fileInputRef.current.click()}
+                  onClick={() => fileInputRef.current.click()}
                   className="mt-1 text-[#24a173] text-sm font-semibold hover:underline"
                 >
                   Change profile picture
@@ -154,8 +167,6 @@ const Adminprofile = () => {
               </div>
             </div>
             <form className="space-y-6">
-
-
               <div>
                 <label className="text-sm font-semibold text-slate-700">
                   Email Address
@@ -183,7 +194,7 @@ const Adminprofile = () => {
                 </label>
                 <input
                   disabled
-               value={user?.state}
+                  value={user?.state}
                   className="w-full mt-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed"
                 />
               </div>
@@ -191,13 +202,12 @@ const Adminprofile = () => {
           </div>
           <div className="lg:col-span-2 space-y-8">
             <div className="space-y-6">
-            
               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
                 <h4 className="font-bold text-slate-800 mb-4">
                   Recent Donations
                 </h4>
                 {recentDonations.length === 0 ? (
-         <p className="text-sm text-slate-400 text-center py-6">
+                  <p className="text-sm text-slate-400 text-center py-6">
                     No activity yet
                   </p>
                 ) : (
@@ -268,16 +278,16 @@ const Adminprofile = () => {
             </div>
             <div className="space-y-6">
               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-             <h4 className="font-bold text-slate-800 mb-1">Top Donors</h4>
-               <p className="text-xs text-slate-400 mb-4">
+                <h4 className="font-bold text-slate-800 mb-1">Top Donors</h4>
+                <p className="text-xs text-slate-400 mb-4">
                   Platform statistics overview
-               </p>
+                </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="rounded-xl p-4 bg-slate-50 border border-slate-200 hover:shadow transition">
-                  <p className="text-xs font-semibold text-slate-500 uppercase">
-                    Total Users
-             </p>
+                    <p className="text-xs font-semibold text-slate-500 uppercase">
+                      Total Users
+                    </p>
                     <p className="text-3xl font-black text-slate-900 mt-1">
                       {stats?.total_registered_users ?? 0}
                     </p>
@@ -295,13 +305,13 @@ const Adminprofile = () => {
                       Successful Donations
                     </p>
                     <p className="text-3xl font-black text-emerald-800 mt-1">
-              {stats?.total_successful_donations ?? 0}
-           </p>
+                      {stats?.total_successful_donations ?? 0}
+                    </p>
                   </div>
+                </div>
+              </div>
             </div>
-       </div>
           </div>
-         </div>
         </div>
       </main>
     </div>

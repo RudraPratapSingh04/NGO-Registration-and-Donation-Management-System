@@ -22,6 +22,12 @@ const Profile = () => {
   });
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user?.profile_picture) {
+      setAvatar(`http://localhost:8000${user.profile_picture}`);
+    }
+  }, [user?.profile_picture]);
   useEffect(() => {
     async function loadRecentDonations() {
       try {
@@ -69,33 +75,34 @@ const Profile = () => {
 
     const formData = new FormData();
     formData.append("profile_picture", file);
-    const res = await apiFetch(
-      "http://localhost:8000/api/profile/upload-picture/",
-      {
+
+    try {
+      const res = await apiFetch("/api/profile/upload-picture/", {
         method: "POST",
         body: formData,
-      },
-    );
+        headers: {},
+      });
 
-    if (!res.ok) return;
-    // const data = await res.json();
-    // const url = data?.profile_picture
-    //   ? `http://localhost:8000${data.profile_picture}`
-    //   : null;
-    // setAvatar(url);
-    const data = await res.json();
+      if (!res.ok) {
+        console.error("Failed to upload profile picture");
+        return;
+      }
 
-    const imageUrl = data?.profile_picture;
+      const data = await res.json();
+      const imageUrl = data?.profile_picture;
 
-    if (imageUrl) {
-      const fullUrl = `http://localhost:8000${imageUrl}`;
-      setAvatar(fullUrl);
+      if (imageUrl) {
+        const fullUrl = `http://localhost:8000${imageUrl}`;
+        setAvatar(fullUrl);
 
-      dispatch(
-        updateUser({
-          profile_picture: imageUrl,
-        }),
-      );
+        dispatch(
+          updateUser({
+            profile_picture: imageUrl,
+          }),
+        );
+      }
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
     }
   };
 

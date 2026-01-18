@@ -196,7 +196,7 @@ const Donate = () => {
         console.error(err);
         alert("Unable to initiate payment");
       });
-  }
+  
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar />

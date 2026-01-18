@@ -30,11 +30,20 @@ SECRET_KEY = 'django-insecure-@ta1c8jydt-_w(p+3_c0=wr*pcd8*fogr%1a_jti*2o=sfl6@-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = [
+    "seth-multilateral-jamal.ngrok-free.dev",
+    "localhost",
+    "127.0.0.1",
+]
 
-ALLOWED_HOSTS = []
+
+PAYPAL_CLIENT_ID = "AR5t8-DnVqqe2wZYiIeZJe2PlAjizDhULjKUqvkfiMNdQCmdQ6yJ8Y2yEkcyREMtXgH9P2fyydlzreVg"
+PAYPAL_CLIENT_SECRET = "EAv1fTViBAAY9e6ByLDPYtVJAhvJZTJieA9BGj6CSkQXDNM-RY3-py0Gw9cC1RnTtvIjik00IrlC7Bwk"
 
 
-# Application definition
+
+
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',

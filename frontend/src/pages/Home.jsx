@@ -102,9 +102,6 @@ const Home = () => {
                   <div className="flex items-center gap-2 text-gray-400 text-sm">
                     <span>{campaign.donors} Donors</span>
                   </div>
-                  <button className="text-white hover:text-[#34d399] font-semibold text-sm transition-colors">
-                    Donate Now
-                  </button>
                 </div>
               </div>
             </div>

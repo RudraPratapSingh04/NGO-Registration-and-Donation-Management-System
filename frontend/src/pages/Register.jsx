@@ -1,4 +1,4 @@
-import React, { useState,useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Heart, CheckCircle2, User, Mail, Phone, Lock, Eye, ArrowRight, ShieldCheck } from 'lucide-react';
 import { registerUser, verifyOtp } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +20,8 @@ const Register = () => {
     state: "",
   });
 
-  const [otp, setOtp]=useState("");
+  const [otp, setOtp] = useState("");
+  const otpRefs = useRef([]); // ✅ added ONLY for OTP
 
   const handleRegister=async (e) => {
     e.preventDefault();
@@ -79,6 +80,7 @@ const Register = () => {
       </div>
     </div>
   );
+
   const Stepper = () => (
     <div className="flex items-center justify-center gap-4 mb-6">
       {[1, 2, 3].map((num) => (
@@ -106,6 +108,7 @@ const Register = () => {
         <div className="w-full max-w-md">
           {error && ( <p className="text-red-500 text-sm text-center mb-4"> {typeof error === "string" ? error : "Something went wrong"}</p>)}
           <Stepper />
+
           {step == 1 && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="text-center mb-0">
@@ -133,12 +136,37 @@ const Register = () => {
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 text-center">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Verify OTP</h2>
               <p className="text-gray-500 mb-8"> We've sent a code to{" "} <span className="text-gray-900 font-medium"> {formData.email}</span></p>
+
+              {/* ✅ ONLY FIXED PART */}
               <div className="flex gap-2 justify-between mb-8">
-                {[0, 1, 2, 3, 4, 5].map((i) => (<input key={i} type="text" maxLength="1" value={otp[i] || ""} onChange={(e) => { const value = e.target.value.replace(/\D/, ""); const newOtp = otp.split(""); newOtp[i] = value; setOtp(newOtp.join(""));}}
+                {[0, 1, 2, 3, 4, 5].map((i) => (
+                  <input
+                    key={i}
+                    ref={(el) => (otpRefs.current[i] = el)}
+                    type="text"
+                    maxLength="1"
+                    value={otp[i] || ""}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/, "");
+                      if (!value) return;
+                      const newOtp = otp.split("");
+                      newOtp[i] = value;
+                      setOtp(newOtp.join(""));
+                      if (i < 5) otpRefs.current[i + 1].focus();
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Backspace") {
+                        const newOtp = otp.split("");
+                        newOtp[i] = "";
+                        setOtp(newOtp.join(""));
+                        if (i > 0) otpRefs.current[i - 1].focus();
+                      }
+                    }}
                     className="w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl"
                   />
                 ))}
               </div>
+
               <button onClick={handleVerifyOtp} disabled={otp.length !== 6 || loading} className="w-full bg-[#24a173] text-white py-4 rounded-xl" >
                 Verify OTP
               </button>
@@ -152,6 +180,7 @@ const Register = () => {
     </div>
   );
 };
+
 const InputField = ({ label, icon, ...props }) => (
   <div className="space-y-1.5">
     <label className="text-sm font-semibold text-gray-700">{label}</label>

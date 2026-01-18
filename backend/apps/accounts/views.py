@@ -76,7 +76,7 @@ class VerifyOTPView(APIView):
                 "id": user.id,
                 "username": user.username,
                 "email": user.email,
-                "is_admin": user.is_staff,  
+                "is_admin": user.isAdmin,  
                 "state": getattr(user, "state", None),
                 "phone": getattr(user, "phone_no", None),
                 "created_at": user.date_joined,

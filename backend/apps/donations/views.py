@@ -14,6 +14,10 @@ from django.views.decorators.csrf import csrf_exempt
 import stripe
 from django.http import HttpResponse
 from django.utils import timezone
+import csv
+from .models import Donation
+
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -97,3 +101,40 @@ class MyDonationsView(APIView):
                 "total_amount": total_amount,
             }
         })
+    
+
+def export_donations_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="donations_export.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['User', 'Amount', 'Date Initiated', 'Date Completed', 'Status', 'Transaction ID'])
+    donations = Donation.objects.select_related('user').all()
+
+    for donation in donations:
+        writer.writerow([
+            donation.user.get_full_name() or donation.user.username,
+            donation.amount,
+            donation.initiated_at.strftime('%Y-%m-%d %H:%M'),
+            donation.completed_at.strftime('%Y-%m-%d %H:%M') if donation.completed_at else 'N/A',
+            donation.get_status_display(),
+            donation.transaction_id,
+        ])
+
+    return response
+
+def get_donations(request):
+    donations = Donation.objects.select_related('user').all().order_by('-initiated_at')
+    
+    data = []
+    for d in donations:
+        data.append({
+            "id": d.id,
+            "user": d.user.get_full_name() or d.user.username,
+            "amount": float(d.amount),
+            "date": d.initiated_at.strftime('%b %d, %Y'),
+            "status": d.get_status_display(), 
+            "transaction_id": d.transaction_id
+        })
+    
+    return JsonResponse(data, safe=False)

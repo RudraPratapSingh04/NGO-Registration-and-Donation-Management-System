@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Heart, CheckCircle2, User, Mail, Phone, Lock, Eye, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Heart, CheckCircle2, User, Mail, Phone, Lock, Eye, ArrowRight, ShieldCheck,MapPin } from 'lucide-react';
 import { registerUser, verifyOtp } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -21,8 +21,7 @@ const Register = () => {
   });
 
   const [otp, setOtp] = useState("");
-  const otpRefs = useRef([]); // ✅ added ONLY for OTP
-
+  const otpRefs = useRef([]); 
   const handleRegister=async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -121,7 +120,7 @@ const Register = () => {
                 <div className="relative">
                   <InputField label="Password" icon={<Lock size={18} />} value={formData.password} onChange={(e) =>setFormData({ ...formData,password:e.target.value})} type="password" />
                 </div>
-                <InputField label="State" value={formData.state} onChange={(e) => setFormData({ ...formData, state: e.target.value })}/>
+                <InputField label="State" icon={<MapPin size={18} />} value={formData.state} onChange={(e) => setFormData({ ...formData, state: e.target.value })}/>
                 <button className="w-full bg-[#24a173] hover:bg-[#1d855e] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-all mt-8">
                   Send OTP <ArrowRight size={18} />
                 </button>

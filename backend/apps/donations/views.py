@@ -54,8 +54,6 @@ class MyDonationsView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         donations = Donation.objects.filter(user=request.user).order_by("-initiated_at")
-        print("Logged in user:", request.user)
-        print("Donation count:", donations.count())
         serializer = DonationSerializer(donations, many=True)
         total_amount = donations.filter(status="SUCCESS").aggregate(total=Sum("amount"))["total"] or 0
         counts = donations.values("status").annotate(count=Count("id"))
@@ -65,9 +63,9 @@ class MyDonationsView(APIView):
             "donations": serializer.data,
             "summary": {
                 "total": donations.count(),
-                "success": counts_map.get("SUCCESS", 0),
-                "pending": counts_map.get("PENDING", 0),
-                "failed": counts_map.get("FAILED", 0),
+                "success": donations.filter(status="SUCCESS").count(),
+                "pending": donations.filter(status="PENDING").count(),
+                "failed": donations.filter(status="FAILED").count(),
                 "total_amount": total_amount,
             }
         })

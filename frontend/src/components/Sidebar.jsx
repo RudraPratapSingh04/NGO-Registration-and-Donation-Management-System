@@ -1,11 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Heart, User, History, LogOut } from 'lucide-react';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { logout } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
 import { clearAuth } from "../store/authSlice";
-import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const dispatch=useDispatch()
@@ -36,9 +35,18 @@ const Sidebar = () => {
         <span>DonateHub</span>
       </div>
       <div className="px-6 py-4 flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center font-bold text-slate-300">
-          A
-        </div>
+        {user?.profile_picture ? (
+          <img
+            src={`http://localhost:8000${user.profile_picture}`}
+            alt="Profile"
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center font-bold text-slate-300">
+            {user?.name?.charAt(0).toUpperCase()}
+          </div>
+        )}
+
         <div className="overflow-hidden">
           <div className="flex items-center gap-2">
             <p className="text-sm font-semibold truncate">{user?.name}</p>
@@ -57,7 +65,6 @@ const Sidebar = () => {
                 <User size={20} />
                 <span className="text-sm font-medium">Profile</span>
               </div>
-              
             </div>
           )}
         </NavLink>
@@ -83,7 +90,10 @@ const Sidebar = () => {
         </NavLink>
       </nav>
       <div className="p-4 border-t border-white/5">
-        <button className="flex items-center gap-3 px-3 py-2 w-full text-red-400 hover:bg-red-400/10 rounded-xl transition-all text-sm font-medium" onClick={handleLogout}>
+        <button
+          className="flex items-center gap-3 px-3 py-2 w-full text-red-400 hover:bg-red-400/10 rounded-xl transition-all text-sm font-medium"
+          onClick={handleLogout}
+        >
           <LogOut size={20} />
           Logout
         </button>

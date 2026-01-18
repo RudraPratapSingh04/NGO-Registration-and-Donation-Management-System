@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setAuth } from "../store/authSlice";
-import { Heart, Mail, Lock, ArrowRight } from 'lucide-react';
+import { Heart, Mail, Lock, ArrowRight } from "lucide-react";
 import { login } from "../services/authApi";
-import { fetchCurrentUser } from '../services/userApi';
+import { fetchCurrentUser } from "../services/userApi";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -18,13 +18,9 @@ const Login = () => {
   async function handleLogin(e) {
     e.preventDefault();
     try {
-      const data = await login(email,password);
-      dispatch(setAuth({accessToken:data.access,user:null}));
-      const user = await fetchCurrentUser();
-      dispatch(
-        setAuth({accessToken: data.access,user,})
-      );
-      if (user.is_admin) {
+      const data = await login(email, password);
+      dispatch(setAuth({ accessToken: data.access, user: data.user }));
+      if (data.user.is_admin) {
         navigate("/adminprofile");
       } else {
         navigate("/profile");
@@ -48,40 +44,76 @@ const Login = () => {
             Make a difference <br /> with every donation
           </h1>
           <p className="text-gray-400 text-lg mb-10 max-w-md leading-relaxed">
-            Join thousands of generous donors who are changing lives through their contributions.
+            Join thousands of generous donors who are changing lives through
+            their contributions.
           </p>
         </div>
       </div>
       <div className="flex flex-col items-center justify-center p-8 lg:p-20">
         <div className="w-full max-w-md animate-in fade-in slide-in-from-right-4 duration-500">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h2>
-            <p className="text-gray-500">Sign in to continue your journey of giving</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              Welcome back
+            </h2>
+            <p className="text-gray-500">
+              Sign in to continue your journey of giving
+            </p>
           </div>
           <form className="space-y-5" onSubmit={handleLogin}>
             {error && (
               <p className="text-red-500 text-sm text-center">{error}</p>
             )}
             <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-gray-700 ml-1">Email</label>
+              <label className="text-sm font-semibold text-gray-700 ml-1">
+                Email
+              </label>
               <div className="relative group">
-                <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#24a173] transition-colors" />
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white" />
+                <Mail
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#24a173] transition-colors"
+                />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white"
+                />
               </div>
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-gray-700 ml-1">Password</label>
+              <label className="text-sm font-semibold text-gray-700 ml-1">
+                Password
+              </label>
               <div className="relative group">
-                <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#24a173] transition-colors" />
-                <input type={showPass ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full pl-11 pr-12 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white" />
+                <Lock
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#24a173] transition-colors"
+                />
+                <input
+                  type={showPass ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full pl-11 pr-12 py-3.5 border border-gray-200 rounded-xl focus:border-[#24a173] focus:ring-4 focus:ring-[#24a173]/5 outline-none transition-all text-gray-900 bg-white"
+                />
               </div>
             </div>
-            <button type="submit" className="w-full bg-[#24a173] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#1d855e] transition-all">
+            <button
+              type="submit"
+              className="w-full bg-[#24a173] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#1d855e] transition-all"
+            >
               Sign In <ArrowRight size={18} />
             </button>
           </form>
           <p className="text-center text-gray-500 mt-8 text-sm">
-            Don't have an account? <a href="/register" className="text-[#24a173] font-semibold hover:underline">Create one</a>
+            Don't have an account?{" "}
+            <a
+              href="/register"
+              className="text-[#24a173] font-semibold hover:underline"
+            >
+              Create one
+            </a>
           </p>
         </div>
       </div>

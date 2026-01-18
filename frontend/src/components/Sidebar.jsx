@@ -5,6 +5,7 @@ import { useDispatch,useSelector } from 'react-redux';
 import { logout } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
 import { clearAuth } from "../store/authSlice";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const dispatch=useDispatch()
@@ -49,12 +50,12 @@ const Sidebar = () => {
 
         <div className="overflow-hidden">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold truncate">{user.name}</p>
+            <p className="text-sm font-semibold truncate">{user?.name}</p>
             <span className="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">
               User
             </span>
           </div>
-          <p className="text-xs text-slate-500 truncate">{user.email}</p>
+          <p className="text-xs text-slate-500 truncate">{user?.email}</p>
         </div>
       </div>
       <nav className="flex-1 px-3 space-y-1">

@@ -43,3 +43,19 @@ class RegisterSerializer(serializers.ModelSerializer):
 class OTPVerifySerializer(serializers.Serializer):
     email=serializers.EmailField()
     otp=serializers.CharField(max_length=6)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    isAdmin = serializers.BooleanField(source="is_staff")
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "name",
+            "email",
+            "phone_no",
+            "isAdmin",
+            "profile_picture",
+        ]
+

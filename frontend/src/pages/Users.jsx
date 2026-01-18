@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useEffect } from "react";
+import { fetchUsers,toggleAdmin } from "../services/userApi";
 import { Search, ShieldCheck, ShieldAlert } from 'lucide-react';
 import Adminsidebar from '../components/Adminsidebar';
 
@@ -6,49 +8,60 @@ import Adminsidebar from '../components/Adminsidebar';
 
 
 const Users = () => {
-  const [users, setUsers] = useState([
-    { id: '1', name: 'John Doe', email: 'john@example.com', phone: '+1234567890', role: 'User', initial: 'J', color: 'bg-emerald-500' },
-    { id: '2', name: 'Jane Smith', email: 'jane@example.com', phone: '+0987654321', role: 'User', initial: 'J', color: 'bg-emerald-500' },
-    { id: '3', name: 'Admin User', email: 'admin@example.com', phone: '+1122334455', role: 'Admin', initial: 'A', color: 'bg-emerald-600' },
-    { id: '4', name: 'Mike Johnson', email: 'mike@example.com', phone: '+5566778899', role: 'User', initial: 'M', color: 'bg-emerald-500' },
-  ]);
+  const [users, setUsers] = useState([]);
+  const makeAdmin = async (id) => {
+  if (!window.confirm("Are you sure you want to make this user an admin?")) return;
 
-
-
-
-  const makeAdmin = (id) => {
-    if (!window.confirm('Are you sure you want to make this user an admin?')){
-        return;
-    }
+  try {
+    const res = await toggleAdmin(id);
 
     setUsers(prev =>
       prev.map(user =>
         user.id === id
-          ? { ...user, role: 'Admin', color: 'bg-emerald-600' }
+          ? {
+              ...user,
+              role: res.isAdmin ? "Admin" : "User",
+              color: res.isAdmin ? "bg-emerald-600" : "bg-emerald-500",
+            }
           : user
       )
     );
-  };
+  } catch (err) {
+    alert("Failed to update role");
+  }
+};
 
-  const removeAdmin = (id) => {
-    if (!window.confirm('Are you sure you want to remove admin access?')){
-        return;
-    }
+const removeAdmin = makeAdmin;
 
-    setUsers(prev =>
-      prev.map(user =>
-        user.id === id
-          ? { ...user, role: 'User', color: 'bg-emerald-500' }
-          : user
-      )
-    );
-  };
 
   const userStats = [
     { label: 'Total Users', count: users.length, color: 'text-slate-900' },
     { label: 'Admins', count: users.filter(u => u.role === 'Admin').length, color: 'text-emerald-600' },
     { label: 'Regular Users', count: users.filter(u => u.role === 'User').length, color: 'text-slate-900' },
   ];
+
+  useEffect(() => {
+  fetchUsers()
+    .then(data => {
+      const usersArray = Array.isArray(data) ? data : data.results;
+
+      const formattedUsers = usersArray.map(u => ({
+        id: u.id,
+        name: u.name || "No Name",
+        email: u.email,
+        phone: u.phone_no || "—",
+        role: u.isAdmin ? "Admin" : "User",
+        initial: u.name ? u.name[0].toUpperCase() : "U",
+        color: u.isAdmin ? "bg-emerald-600" : "bg-emerald-500",
+      }));
+
+      setUsers(formattedUsers);
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Unable to load users");
+    });
+}, []);
 
   return (
     <div className="ml-64 flex min-h-screen bg-slate-50">
@@ -101,8 +114,8 @@ const Users = () => {
                   <td className="px-6 py-4">{user.phone}</td>
                   <td className="px-6 py-4">
                     {user.role === 'Admin' ? (
-                      <span className="px-3 py-1 text-xs rounded-full bg-emerald-50 text-emerald-600 font-bold flex items-center gap-1">
-                        <ShieldCheck size={12} /> Admin
+                      <span className="px-3 py-1 text-xs rounded-full bg-emerald-50 text-emerald-600 font-bold gap-1">
+                        Admin
                       </span>
                     ) : (
                       <span className="px-3 py-1 text-xs rounded-full bg-slate-100 font-bold">

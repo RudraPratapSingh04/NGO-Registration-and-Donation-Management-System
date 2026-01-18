@@ -1,5 +1,6 @@
 import React from 'react';
 import Adminsidebar from '../components/Adminsidebar';
+import Donationchart from '../components/Donationchart';
 
 const Adminoverview = () => {
   const stats = [
@@ -9,16 +10,13 @@ const Adminoverview = () => {
     { label: 'Failed', value: '2' },
   ];
 
-
-
   const recentDonations = [
     { name: 'Mike Johnson', date: '2026-01-12', amount: '7,422', status: 'Successful' },
     { name: 'John Doe', date: '2026-01-11', amount: '9,901', status: 'Failed' },
     { name: 'John Doe', date: '2026-01-07', amount: '8,263', status: 'Successful' },
   ];
 
-
-
+  const donationCounts = [9, 4, 2]; 
   return (
     <div className="ml-64 flex min-h-screen bg-slate-50 font-sans">
       <Adminsidebar activeTab="overview" />
@@ -27,6 +25,7 @@ const Adminoverview = () => {
           <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
           <p className="text-slate-500">Overview of your donation platform</p>
         </header>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {stats.map((stat, i) => (
             <div key={i} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-start gap-4">
@@ -43,7 +42,7 @@ const Adminoverview = () => {
             <div className="flex justify-between items-center px-2">
               <h3 className="text-xl font-bold text-slate-800">Recent Donations</h3>
               <button className="text-[#24a173] text-sm font-bold flex items-center gap-1 hover:underline">
-                View All 
+                View All
               </button>
             </div>
             <div className="space-y-3">
@@ -71,11 +70,7 @@ const Adminoverview = () => {
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
               <h3 className="text-lg font-bold text-slate-800 mb-6">Donation Status</h3>
-              <div className="space-y-6">
-                <StatusProgress label="Successful" count="9" color="bg-[#24a173]" percent="75%" />
-                <StatusProgress label="Pending" count="4" color="bg-amber-400" percent="33%" />
-                <StatusProgress label="Failed" count="2" color="bg-red-500" percent="15%" />
-              </div>
+              <Donationchart dataCounts={donationCounts} />
             </div>
           </div>
         </div>
@@ -83,20 +78,5 @@ const Adminoverview = () => {
     </div>
   );
 };
-const StatusProgress = ({ label, count, color, percent }) => (
-  <div className="space-y-2">
-    <div className="flex justify-between text-sm font-bold">
-      <div className="flex items-center gap-2">
-        <span className={`w-2 h-2 rounded-full ${color}`} />
-        <span className="text-slate-500">{label}</span>
-      </div>
-      <span className="text-slate-900">{count}</span>
-    </div>
-    <div className="w-full h-2.5 bg-slate-50 rounded-full overflow-hidden">
-      <div className={`h-full ${color} rounded-full`} style={{ width: percent }} />
-    </div>
-  </div>
-);
-
 
 export default Adminoverview;

@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
@@ -12,6 +11,8 @@ from apps.accounts.utils import create_and_send_otp
 from apps.accounts.models import EmailOTP
 from .serializers import EmailTokenObtainPairSerializer, OTPVerifySerializer, RegisterSerializer
 from django.contrib.auth import get_user_model
+from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
 
 User = get_user_model()
 
@@ -77,8 +78,9 @@ class VerifyOTPView(APIView):
                 "email": user.email,
                 "is_admin": user.is_staff,  
                 "state": getattr(user, "state", None),
-                "phone": getattr(user, "phone", None),
+                "phone": getattr(user, "phone_no", None),
                 "created_at": user.date_joined,
+                "profile_picture": user.profile_picture.url if user.profile_picture else None,
             }
         })
         response.set_cookie(
@@ -114,6 +116,7 @@ class CurrentUserView(APIView):
             "state": getattr(user, "state", None),
             "phone": getattr(user, "phone_no", None),
             "created_at": user.date_joined,
+            "profile_picture": user.profile_picture.url if user.profile_picture else None,
         })
     
 class LogoutView(APIView):
@@ -122,3 +125,19 @@ class LogoutView(APIView):
         response = Response({"detail": "Logged out"})
         response.delete_cookie("refresh")  
         return response
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def update_profile_picture(request):
+    user = request.user
+    image = request.FILES.get("profile_picture")
+
+    if not image:
+        return Response({"error": "No image provided"}, status=400)
+
+    user.profile_picture = image
+    user.save()
+
+    return Response({
+        "profile_picture": user.profile_picture.url
+    })

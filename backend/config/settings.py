@@ -31,7 +31,11 @@ SECRET_KEY = 'django-insecure-@ta1c8jydt-_w(p+3_c0=wr*pcd8*fogr%1a_jti*2o=sfl6@-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    ".ngrok-free.dev",
+]
 
 
 # Application definition
@@ -64,6 +68,8 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
 }
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
@@ -75,9 +81,26 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = list(default_headers) + [
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    "accept",
     "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
 ]
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -89,6 +112,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 ROOT_URLCONF = 'config.urls'
 
@@ -123,6 +149,8 @@ DATABASES = {
     }
 }
 
+STRIPE_SECRET_KEY = "sk_test_51Sqoz0PvDsmMy4UH43qiZsPfxEJeyxKmVyGPPcIs9xaCQU5ULvJe2XcatLTKaZ4DIXXKWE4Qvc2W7LhSUxDdncpq00gXwOscDn"
+STRIPE_WEBHOOK_SECRET = "whsec_tx1RcnwnZkPk6NDSG4mqJDSTyHX3L0Q1"
 
 AUTH_USER_MODEL = 'accounts.User'
 

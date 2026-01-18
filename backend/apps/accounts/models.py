@@ -10,6 +10,7 @@ class User(AbstractUser):
     state=models.CharField(max_length=50)
     USERNAME_FIELD="email"
     REQUIRED_FIELDS=["username"]
+    profile_picture=models.ImageField(upload_to='profile_pics/',null=True,blank=True)
 
 class EmailOTP(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)

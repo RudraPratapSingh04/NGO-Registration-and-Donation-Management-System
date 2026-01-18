@@ -12,5 +12,5 @@ class DonationSerializer(serializers.ModelSerializer):
             "status",
             "initiated_at",
             "completed_at",
-            "user_name"
+            "user_name",
         ]

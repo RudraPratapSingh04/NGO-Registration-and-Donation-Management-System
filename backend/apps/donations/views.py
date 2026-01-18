@@ -12,13 +12,14 @@ import stripe
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import stripe
 from django.http import HttpResponse
 from django.utils import timezone
 import csv
 
 User=get_user_model()
 
+
+User = get_user_model()
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @api_view(["POST"])

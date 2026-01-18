@@ -6,12 +6,12 @@ const Donations = () => {
   const [activeFilter, setActiveFilter] = useState('All');
 
   const donations = [
-    {user: 'Mike Johnson', initial: 'M', amount: '7,422', date: 'Jan 12, 2026', status: 'Successful' },
-    {user: 'John Doe', initial: 'J', amount: '9,901', date: 'Jan 11, 2026', status: 'Failed' },
-    {user: 'John Doe', initial: 'J', amount: '8,263', date: 'Jan 7, 2026', status: 'Successful' },
-    {user: 'Mike Johnson', initial: 'M', amount: '1,110', date: 'Jan 7, 2026', status: 'Successful' },
-    {user: 'John Doe', initial: 'J', amount: '8,653', date: 'Jan 5, 2026', status: 'Pending' },
-    {user: 'John Doe', initial: 'J', amount: '7,045', date: 'Jan 2, 2026', status: 'Successful' },
+    {user: 'Mike Johnson', amount: '7,422', date: 'Jan 12, 2026', status: 'Successful' },
+    {user: 'John Doe', amount: '9,901', date: 'Jan 11, 2026', status: 'Failed' },
+    {user: 'John Doe', amount: '8,263', date: 'Jan 7, 2026', status: 'Successful' },
+    {user: 'Mike Johnson', amount: '1,110', date: 'Jan 7, 2026', status: 'Successful' },
+    {user: 'John Doe',  amount: '8,653', date: 'Jan 5, 2026', status: 'Pending' },
+    {user: 'John Doe',  amount: '7,045', date: 'Jan 2, 2026', status: 'Successful' },
   ];
 
   const filterBtn = (label) =>

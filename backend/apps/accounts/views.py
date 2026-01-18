@@ -7,6 +7,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+from rest_framework.permissions import IsAdminUser
+from .serializers import UserSerializer
 from apps.accounts.utils import create_and_send_otp
 from apps.accounts.models import EmailOTP
 from .serializers import EmailTokenObtainPairSerializer, OTPVerifySerializer, RegisterSerializer
@@ -141,3 +143,26 @@ def update_profile_picture(request):
     return Response({
         "profile_picture": user.profile_picture.url
     })
+
+
+@api_view(["GET"])
+@permission_classes([IsAdminUser])  
+def list_users(request):
+    users = User.objects.all().order_by("-timestamp")
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
+
+@api_view(["PATCH"])
+@permission_classes([IsAdminUser])
+def toggle_admin(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        # update your actual field
+        user.isAdmin = not user.isAdmin
+        user.save()
+        return Response({
+            "id": user.id,
+            "isAdmin": user.isAdmin
+        })
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=404)

@@ -30,6 +30,7 @@ urlpatterns = [
     path("api/auth/register/", RegisterView.as_view()),
     path("api/auth/verify-otp/", VerifyOTPView.as_view()),
     path("api/auth/logout/", LogoutView.as_view()),
+    path("api/accounts/", include("apps.accounts.urls")),
 ]
 
 if settings.DEBUG:

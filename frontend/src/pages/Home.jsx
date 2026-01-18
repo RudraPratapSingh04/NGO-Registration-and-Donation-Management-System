@@ -2,7 +2,6 @@ import React from 'react';
 import { Heart, ArrowRight, Target, Users, Globe } from 'lucide-react';
 
 const Home = () => {
-  // Dummy data for the "Good Works" section
   const campaigns = [
     {
       id: 1,
@@ -39,7 +38,6 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-[#1a232e] text-white font-sans selection:bg-green-500/30">
       
-      {/* Navigation */}
       <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 text-xl font-bold">
           <div className="p-1 border border-white/20 rounded-lg">
@@ -55,7 +53,6 @@ const Home = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <main className="relative flex flex-col items-center justify-center text-center px-4 pt-20 pb-32 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  bg-green-500/20 blur-[120px] rounded-full pointer-events-none" />
         <h1 className="text-5xl md:text-7xl font-bold max-w-4xl leading-tight tracking-tight">

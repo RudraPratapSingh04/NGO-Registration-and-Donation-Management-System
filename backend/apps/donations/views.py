@@ -7,14 +7,15 @@ from apps.donations.serializers import DonationSerializer
 from .models import Donation
 from rest_framework.views import APIView
 from django.db.models import Sum, Count
+from django.contrib.auth import get_user_model
 import stripe
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import stripe
 from django.http import HttpResponse
 from django.utils import timezone
 
+User = get_user_model()
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @api_view(["POST"])
@@ -96,4 +97,47 @@ class MyDonationsView(APIView):
                 "failed": donations.filter(status="FAILED").count(),
                 "total_amount": total_amount,
             }
+        })
+    
+class AllDonationsView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        donations = Donation.objects.order_by("-initiated_at")
+        serializer = DonationSerializer(donations, many=True)
+        total_amount = donations.filter(status="SUCCESS").aggregate(total=Sum("amount"))["total"] or 0
+        counts = donations.values("status").annotate(count=Count("id"))
+        counts_map = {c["status"]: c["count"] for c in counts}
+        
+        return Response({
+            "donations": serializer.data,
+            "summary": {
+                "total": donations.count(),
+                "success": donations.filter(status="SUCCESS").count(),
+                "pending": donations.filter(status="PENDING").count(),
+                "failed": donations.filter(status="FAILED").count(),
+                "total_amount": total_amount,
+                
+            }
+        })
+class AdminStatsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        total_users = User.objects.count()
+
+        successful_donations = Donation.objects.filter(status="SUCCESS")
+
+        total_successful_donations = successful_donations.count()
+
+        total_donor_users = (
+            successful_donations
+            .values("user")
+            .distinct()
+            .count()
+        )
+
+        return Response({
+            "total_registered_users": total_users,
+            "total_donor_users": total_donor_users,
+            "total_successful_donations": total_successful_donations,
         })

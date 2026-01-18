@@ -9,6 +9,7 @@ import Adminsidebar from '../components/Adminsidebar';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const makeAdmin = async (id) => {
   if (!window.confirm("Are you sure you want to make this user an admin?")) return;
 
@@ -62,6 +63,14 @@ const removeAdmin = makeAdmin;
       alert("Unable to load users");
     });
 }, []);
+  const filteredUsers = users.filter((user) => {
+    const term = searchTerm.toLowerCase();
+
+    return (
+      user.name.toLowerCase().includes(term) ||
+      user.email.toLowerCase().includes(term)
+    );
+  });
 
   return (
     <div className="ml-64 flex min-h-screen bg-slate-50">
@@ -74,15 +83,22 @@ const removeAdmin = makeAdmin;
               <div className="flex items-center gap-2 text-slate-400 mb-2">
                 <span className="text-sm font-semibold">{stat.label}</span>
               </div>
-              <p className={`text-4xl font-black ${stat.color}`}>{stat.count}</p>
+              <p className={`text-4xl font-black ${stat.color}`}>
+                {stat.count}
+              </p>
             </div>
           ))}
         </div>
         <div className="bg-white p-4 rounded-3xl border shadow-sm mb-6">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <Search
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              size={18}
+            />
             <input
               placeholder="Search by name or email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-11 pr-4 py-3 bg-slate-50 rounded-2xl outline-none"
             />
           </div>
@@ -99,10 +115,12 @@ const removeAdmin = makeAdmin;
               </tr>
             </thead>
             <tbody>
-              {users.map(user => (
+              {filteredUsers.map((user) => (
                 <tr key={user.id} className="border-t hover:bg-slate-50">
                   <td className="px-6 py-4 flex items-center gap-3">
-                    <div className={`w-10 h-10 ${user.color} rounded-full text-white flex items-center justify-center font-bold`}>
+                    <div
+                      className={`w-10 h-10 ${user.color} rounded-full text-white flex items-center justify-center font-bold`}
+                    >
                       {user.initial}
                     </div>
                     <div>
@@ -113,7 +131,7 @@ const removeAdmin = makeAdmin;
                   <td className="px-6 py-4">{user.email}</td>
                   <td className="px-6 py-4">{user.phone}</td>
                   <td className="px-6 py-4">
-                    {user.role === 'Admin' ? (
+                    {user.role === "Admin" ? (
                       <span className="px-3 py-1 text-xs rounded-full bg-emerald-50 text-emerald-600 font-bold gap-1">
                         Admin
                       </span>
@@ -124,7 +142,7 @@ const removeAdmin = makeAdmin;
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    {user.role === 'Admin' ? (
+                    {user.role === "Admin" ? (
                       <button
                         onClick={() => removeAdmin(user.id)}
                         className="px-4 py-2 bg-red-50 text-red-500 rounded-xl text-xs font-bold hover:bg-red-100"

@@ -14,6 +14,9 @@ from django.views.decorators.csrf import csrf_exempt
 import stripe
 from django.http import HttpResponse
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -36,7 +39,7 @@ def create_payment_intent(request):
     )
 
     intent = stripe.PaymentIntent.create(
-        amount=int(amount * 100),  # paise
+        amount=int(amount * 100),  
         currency="inr",
         automatic_payment_methods={"enabled": True},
         metadata={
@@ -82,6 +85,8 @@ class MyDonationsView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         donations = Donation.objects.filter(user=request.user).order_by("-initiated_at")
+        print("Logged in user:", request.user)
+        print("Donation count:", donations.count())
         serializer = DonationSerializer(donations, many=True)
         total_amount = donations.filter(status="SUCCESS").aggregate(total=Sum("amount"))["total"] or 0
         counts = donations.values("status").annotate(count=Count("id"))
@@ -91,9 +96,64 @@ class MyDonationsView(APIView):
             "donations": serializer.data,
             "summary": {
                 "total": donations.count(),
-                "success": donations.filter(status="SUCCESS").count(),
-                "pending": donations.filter(status="PENDING").count(),
-                "failed": donations.filter(status="FAILED").count(),
+                "success": counts_map.get("SUCCESS", 0),
+                "pending": counts_map.get("PENDING", 0),
+                "failed": counts_map.get("FAILED", 0),
                 "total_amount": total_amount,
             }
         })
+    
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def admin_dashboard(request):
+    if not request.user.isAdmin:
+        return Response({"detail": "Not authorized"}, status=403)
+    total_users = User.objects.count()
+
+    total_donations_amount = (
+        Donation.objects
+        .filter(status="SUCCESS")
+        .aggregate(total=Sum("amount"))["total"] or 0
+    )
+
+    donation_status_counts = (
+        Donation.objects
+        .values("status")
+        .annotate(count=Count("id"))
+    )
+
+    status_map = {item["status"]: item["count"] for item in donation_status_counts}
+
+    successful_count = status_map.get("SUCCESS", 0)
+    pending_count = status_map.get("PENDING", 0)
+    failed_count = status_map.get("FAILED", 0)
+    recent_donations = (
+        Donation.objects
+        .select_related("user")
+        .order_by("-initiated_at")[:5]
+    )
+
+    recent_data = [
+        {
+            "name": d.user.name,
+            "date": d.initiated_at,
+            "amount": d.amount,
+            "status": d.status,
+        }
+        for d in recent_donations
+    ]
+
+    return Response({
+        "stats": {
+            "total_users": total_users,
+            "total_donations": total_donations_amount,
+            "successful": successful_count,
+            "failed": failed_count,
+        },
+        "recent_donations": recent_data,
+        "donation_chart": {
+            "successful": successful_count,
+            "pending": pending_count,
+            "failed": failed_count,
+        }
+    })

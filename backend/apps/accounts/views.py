@@ -127,6 +127,7 @@ class LogoutView(APIView):
         response = Response({"detail": "Logged out"})
         response.delete_cookie("refresh")  
         return response
+    
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
@@ -157,7 +158,6 @@ def list_users(request):
 def toggle_admin(request, user_id):
     try:
         user = User.objects.get(id=user_id)
-        # update your actual field
         user.isAdmin = not user.isAdmin
         user.save()
         return Response({

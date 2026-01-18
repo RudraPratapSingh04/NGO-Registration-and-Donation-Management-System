@@ -167,7 +167,7 @@ const filteredDonations = donations.filter((d) => {
                   Date
                 </th>
                 <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                  Payment Method
+                  Time
                 </th>
                 <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
                   Status
@@ -192,7 +192,9 @@ const filteredDonations = donations.filter((d) => {
                     <td className="px-6 py-4 text-sm">
                       {new Date(d.initiated_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 text-sm">Online</td>
+                    <td className="px-6 py-4 text-sm">
+                      {new Date(d.initiated_at).toLocaleTimeString()}
+                    </td>
                     <td
                       className={`px-6 py-4 text-sm font-semibold ${
                         d.status === "SUCCESS"

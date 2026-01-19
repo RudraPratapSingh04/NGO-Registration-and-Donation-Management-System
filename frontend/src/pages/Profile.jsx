@@ -113,8 +113,8 @@ const Profile = () => {
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900">Profile</h1>
         </header>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-8">
+          <div className="lg:col-span-3 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
             <div className="flex items-center gap-6 mb-10">
               <div className="flex items-center gap-6 mb-10">
                 <div className="relative group">
@@ -200,7 +200,7 @@ const Profile = () => {
               </div>
             </form>
           </div>
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
               <h4 className="font-bold text-slate-800 mb-4">
                 Recent Donations

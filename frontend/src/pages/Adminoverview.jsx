@@ -20,7 +20,7 @@ const Adminoverview = () => {
 
         setStats([
           { label: "Total Users", value: data.stats.total_users },
-          { label: "Total Donations", value: data.stats.total_donations },
+          { label: "Total Donations", value: `₹${data.stats.total_donations}` },
           { label: "Successful", value: data.stats.successful },
           { label: "Failed", value: data.stats.failed },
         ]);

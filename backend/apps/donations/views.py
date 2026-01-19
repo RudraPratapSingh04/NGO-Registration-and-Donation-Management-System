@@ -176,6 +176,7 @@ def get_donations(request):
             "user": d.user.get_full_name() or d.user.username,
             "amount": float(d.amount),
             "date": d.initiated_at.strftime('%b %d, %Y'),
+            "time": d.initiated_at.strftime('%I:%M %p'),
             "status": d.get_status_display(), 
             "transaction_id": d.transaction_id
         })

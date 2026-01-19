@@ -49,7 +49,7 @@ const Donations = () => {
         </header>
         <div className="flex gap-3 mb-8">
           <button onClick={() => setActiveFilter('All')} className={filterBtn('All')}>All ({donations.length})</button>
-          <button onClick={() => setActiveFilter('Successful')} className={filterBtn('Successful')}>Successful ({donations.filter(d => d.status === 'Successful').length})</button>
+          <button onClick={() => setActiveFilter('Success')} className={filterBtn('Success')}>Successful ({donations.filter(d => d.status === 'Success').length})</button>
           <button onClick={() => setActiveFilter('Pending')} className={filterBtn('Pending')}>Pending ({donations.filter(d => d.status === 'Pending').length})</button>
           <button onClick={() => setActiveFilter('Failed')} className={filterBtn('Failed')}>Failed ({donations.filter(d => d.status === 'Failed').length})</button>
         </div>
@@ -79,7 +79,12 @@ const Donations = () => {
                     <td className="px-8 py-5">
                         {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'INR' }).format(item.amount)}
                     </td>
-                    <td className="px-8 py-5 text-slate-500">{item.date}</td>
+                    <td className="px-8 py-5 text-slate-500">
+                      {item.date}
+                    </td>
+                    <td className="px-8 py-5 text-slate-500">
+                      {item.time}
+                    </td>
                     <td className="px-8 py-5">
                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
                         item.status == 'Success' ? 'bg-emerald-50 text-emerald-600' : 

@@ -121,24 +121,21 @@ const removeAdmin = makeAdmin;
             </div>
           ))}
         </div>
-        <div className="bg-white p-4 rounded-3xl border shadow-sm mb-6">
-          <div className="relative">
-            <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-              size={18}
-            />
-            <input
-              placeholder="Search by name or email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-slate-50 rounded-2xl outline-none"
-            />
-          </div>
-          <button onClick={exportToCSV} className="flex items-center gap-2 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-2xl hover:bg-slate-50 transition-all text-sm font-bold" >
-            <Download size={18} />
-            Export CSV
-          </button>
-        </div>
+         <div className="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm mb-6 flex gap-4 items-center">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                    <input
+                      placeholder="Search by name or email..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full pl-11 pr-4 py-3 bg-slate-50 rounded-2xl outline-none"
+                    />
+                  </div>
+                  <button className="flex items-center gap-2 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-2xl hover:bg-slate-50 transition-all text-sm font-bold" onClick={exportToCSV}>
+                    <Download size={18} />
+                    Export CSV
+                  </button>
+                </div>
         <div className="bg-white rounded-3xl border shadow-sm overflow-hidden">
           <table className="w-full text-left">
             <thead className="bg-slate-50 text-xs uppercase text-slate-400">

@@ -10,7 +10,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { apiFetch } from "../services/api.js";
 
 const stripePromise = loadStripe(
-  "pk_test_51Sqoz0PvDsmMy4UHP9SVKzLcllelPSIos9Jtph46sN80jpF2UhvKSB9cPjcTB37Ux83CIYEaiBgzyONNiUDaeLli00cEfaOiMU",
+  import.meta.env.VITE_STRIPE_PUBLIC_KEY,
 );
 
 function CheckoutForm({ amount, closeModal }) {
@@ -130,7 +130,7 @@ const Donate = () => {
             Make a Donation
           </button>
         </div>
-        <h1 className="text-4xl text-gray-600">Recent Campains</h1>
+        <h1 className="text-4xl text-gray-600">Recent Campaigns</h1>
         <div className="grid pt-20 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {campaigns.map((campaign) => (
             <div key={campaign.id} className="bg-white border border-black rounded-2xl shadow-sm border border-gray-100 overflow-hidden">

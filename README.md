@@ -119,7 +119,6 @@ NSS PROJECT/
 
    # Stripe Configuration
    STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
-   STRIPE_PUBLIC_KEY=pk_test_your_stripe_public_key
    STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
    ```
 

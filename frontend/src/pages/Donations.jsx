@@ -82,7 +82,7 @@ const Donations = () => {
                     <td className="px-8 py-5 text-slate-500">{item.date}</td>
                     <td className="px-8 py-5">
                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
-                        item.status === 'Successful' ? 'bg-emerald-50 text-emerald-600' : 
+                        item.status == 'Success' ? 'bg-emerald-50 text-emerald-600' : 
                         item.status === 'Pending' ? 'bg-yellow-50 text-yellow-600' : 'bg-red-50 text-red-600'
                       }`}>
                         {item.status}

@@ -221,7 +221,22 @@ To test Stripe webhooks or access your backend from external services, you can u
 
    The frontend will be available at `http://localhost:5173`
 
-## 📋 Available Scripts
+## � Test Card Details for Payment
+
+For testing the Stripe payment integration, use the following test card numbers:
+
+### Successful Payment
+
+- **Card Number**: `4242424242424242`
+- **Expiry Date**: Any future date (e.g., 12/25)
+- **CVV**: Any 3-digit number (e.g., 123)
+
+### Failed Payment
+
+- Use any valid card number other than the one mentioned above
+
+
+## �📋 Available Scripts
 
 ### Backend
 
@@ -286,13 +301,10 @@ To test Stripe webhooks or access your backend from external services, you can u
 - Environment variable management
 - SQL injection prevention (Django ORM)
 
-
 ## 👥 Authors
 
 - Rudra Pratap Singh
 - Atharv Garg
 - Alok Prajapati
-
-
 
 **Note**: Make sure to configure your database and environment variables before running the application.

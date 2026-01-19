@@ -228,7 +228,7 @@ For testing the Stripe payment integration, use the following test card numbers:
 ### Successful Payment
 
 - **Card Number**: `4242424242424242`
-- **Expiry Date**: Any future date (e.g., 12/25)
+- **Expiry Date**: Any future date (e.g., 12/30)
 - **CVV**: Any 3-digit number (e.g., 123)
 
 ### Failed Payment

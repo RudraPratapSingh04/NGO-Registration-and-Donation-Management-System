@@ -23,22 +23,25 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
         }
         return data
 class RegisterSerializer(serializers.ModelSerializer):
-    password=serializers.CharField(write_only=True,min_length=8)
+    password = serializers.CharField(write_only=True, min_length=8)
+
     class Meta:
-        model=User
-        fields=["name","email","password","phone_no","state"]
+        model = User
+        fields = ["name", "email", "password", "phone_no", "state"]
 
     def create(self, validated_data):
         password = validated_data.pop("password")
-        email = validated_data.pop("email")
+        name = validated_data.get("name")   
+
         user = User(
-            email=email,
-            username=email,                  
+            username=name,               
             **validated_data
         )
         user.set_password(password)
+        user.is_active = False              
         user.save()
         return user
+
         
 class OTPVerifySerializer(serializers.Serializer):
     email=serializers.EmailField()

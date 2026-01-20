@@ -30,7 +30,7 @@ const Register = () => {
       await registerUser(formData);
       setStep(2);
     } catch (err) {
-      setError(err?.message || "Registration failed");
+      setError("");
     } finally {
       setLoading(false);
     }

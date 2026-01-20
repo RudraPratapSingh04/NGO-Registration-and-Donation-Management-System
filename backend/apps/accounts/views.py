@@ -49,6 +49,7 @@ class RegisterView(APIView):
                 {"message": "OTP sent to email"},
                 status=status.HTTP_201_CREATED,
             )
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class VerifyOTPView(APIView):
